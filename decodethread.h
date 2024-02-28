@@ -8,6 +8,7 @@ class decodeThread : public QObject
     Q_OBJECT
 public:
     explicit decodeThread(QObject *parent = nullptr);
+    void decodeMessage(QByteArray message);
 
 signals:
 };

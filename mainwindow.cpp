@@ -3,12 +3,14 @@
 
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow)
+    // ,m_snackbar(new QtMaterialSnackbar)
 {
     ui->setupUi(this);
+    // m_snackbar->setParent(this);
+    // qDebug()<<myClient->getNetWorkIP();
 
-    qDebug()<<myClient->getNetWorkIP();
 }
 
 MainWindow::~MainWindow()
@@ -20,7 +22,7 @@ void MainWindow::on_pushButton_clicked()
 {
     myClient->tcpConnect("192.168.21.34",8080);
     connect(myClient,&tcpClient::readSomeMessage,[=](QByteArray message){
-        qDebug()<<message;
+        // m_snackbar->addMessage(message);
     });
 }
 
@@ -28,6 +30,6 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
     QString message =  ui->lineEdit->text();
-    myClient->sendMessage(message.toUtf8());
+    myMotor->open(*myClient->mySocket);
 }
 

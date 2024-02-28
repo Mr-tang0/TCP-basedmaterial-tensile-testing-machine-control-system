@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "tcpclient.h"
-
+#include "motor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,6 +19,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     tcpClient *myClient = new tcpClient;
+    motor *myMotor = new motor;
 
 private slots:
     void on_pushButton_clicked();
@@ -27,5 +28,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    // QtMaterialSnackbar  *const m_snackbar;
 };
 #endif // MAINWINDOW_H

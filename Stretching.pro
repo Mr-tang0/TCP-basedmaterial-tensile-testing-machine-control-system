@@ -18,6 +18,7 @@ SOURCES += \
     decodethread.cpp \
     main.cpp \
     mainwindow.cpp \
+    motor.cpp \
     tcpclient.cpp \
     testwidget.cpp
 
@@ -25,6 +26,7 @@ HEADERS += \
     decodethread.h \
     includeHeader.h \
     mainwindow.h \
+    motor.h \
     tcpclient.h \
     testwidget.h
 
