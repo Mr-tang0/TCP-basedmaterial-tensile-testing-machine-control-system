@@ -6,13 +6,407 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>841</width>
-    <height>629</height>
+    <width>1250</width>
+    <height>800</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1000</width>
+    <height>800</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,8">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="8,0,2">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="3">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,2,2,2,2,2">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="styleSheet">
+                <string notr="true">font: 15pt &quot;幼圆&quot;;</string>
+               </property>
+               <property name="text">
+                <string>载荷</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="load">
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color: rgb(255, 0, 0);
+color: rgb(255, 0, 4);
+}
+</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="QLabel" name="label_7">
+               <property name="styleSheet">
+                <string notr="true">font: 15pt &quot;幼圆&quot;;</string>
+               </property>
+               <property name="text">
+                <string>应力</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="stress"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_9">
+             <item>
+              <widget class="QLabel" name="label_9">
+               <property name="styleSheet">
+                <string notr="true">font: 15pt &quot;幼圆&quot;;</string>
+               </property>
+               <property name="text">
+                <string>计算位移</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="displacement"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="styleSheet">
+                <string notr="true">font: 15pt &quot;幼圆&quot;;</string>
+               </property>
+               <property name="text">
+                <string>位移传感器</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="displacement_sensors"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_10">
+             <item>
+              <widget class="QLabel" name="label_10">
+               <property name="styleSheet">
+                <string notr="true">font: 15pt &quot;幼圆&quot;;</string>
+               </property>
+               <property name="text">
+                <string>应变</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="strain"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_11">
+             <item>
+              <widget class="QLabel" name="label_11">
+               <property name="styleSheet">
+                <string notr="true">font: 15pt &quot;幼圆&quot;;</string>
+               </property>
+               <property name="text">
+                <string>时长</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="Duration"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="emergency">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 20pt &quot;幼圆&quot;;
+background-color: rgb(255, 131, 131);</string>
+         </property>
+         <property name="text">
+          <string>急停</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="8,0,2">
+       <item>
+        <widget class="QGraphicsView" name="graphicsView"/>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_12"/>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetFixedSize</enum>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QPushButton" name="startTest">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: 12pt &quot;幼圆&quot;;</string>
+             </property>
+             <property name="text">
+              <string>开始</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="stopTest">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: 12pt &quot;幼圆&quot;;</string>
+             </property>
+             <property name="text">
+              <string>停止</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QPushButton" name="clearTest">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 10pt &quot;幼圆&quot;;</string>
+               </property>
+               <property name="text">
+                <string>还原当前</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="saveTest">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 10pt &quot;幼圆&quot;;</string>
+               </property>
+               <property name="text">
+                <string>保存当前</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTextBrowser" name="stateBox"/>
+         </item>
+         <item>
+          <widget class="QWidget" name="widget" native="true">
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0" rowspan="2">
+             <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_6">
+                <item>
+                 <widget class="QDoubleSpinBox" name="matulSpeed">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="minimum">
+                   <double>0.010000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>9999.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QPushButton" name="up">
+                <property name="text">
+                 <string>↑</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="stop">
+                <property name="text">
+                 <string>□</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="down">
+                <property name="text">
+                 <string>↓</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QPushButton" name="setLengthZero">
+                <property name="text">
+                 <string>设置0点</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="setWeighZero">
+                <property name="text">
+                 <string>去皮</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QRadioButton" name="blue">
+       <property name="text">
+        <string>blue</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="red">
+       <property name="text">
+        <string>red</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="black">
+       <property name="text">
+        <string>black</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

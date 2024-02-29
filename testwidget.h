@@ -2,6 +2,8 @@
 #define TESTWIDGET_H
 
 #include <QWidget>
+#include "includeHeader.h"
+#include "controler.h"
 
 namespace Ui {
 class testWidget;
@@ -14,6 +16,16 @@ class testWidget : public QWidget
 public:
     explicit testWidget(QWidget *parent = nullptr);
     ~testWidget();
+    Controler *myControler = new Controler;
+
+private slots:
+    void on_pushButton_clicked();
+
+    void on_up_clicked();
+
+    void on_stop_clicked();
+
+    void on_down_clicked();
 
 private:
     Ui::testWidget *ui;

@@ -15,23 +15,29 @@ LIBS+=$$PWD/libs/libcomponents.a
 INCLUDEPATH+=$$PWD/libs/Include
 
 SOURCES += \
+    chart.cpp \
+    controler.cpp \
     decodethread.cpp \
     main.cpp \
     mainwindow.cpp \
-    motor.cpp \
+    systemsetwidget.cpp \
     tcpclient.cpp \
     testwidget.cpp
 
 HEADERS += \
+    chart.h \
+    commandList.h \
+    controler.h \
     decodethread.h \
     includeHeader.h \
     mainwindow.h \
-    motor.h \
+    systemsetwidget.h \
     tcpclient.h \
     testwidget.h
 
 FORMS += \
     mainwindow.ui \
+    systemsetwidget.ui \
     testwidget.ui
 
 # Default rules for deployment.

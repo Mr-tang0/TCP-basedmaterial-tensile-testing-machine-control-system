@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include "tcpclient.h"
-#include "motor.h"
+#include "controler.h"
+#include "includeHeader.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,13 +20,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    tcpClient *myClient = new tcpClient;
-    motor *myMotor = new motor;
+    static tcpClient *myClient;
+    static Controler *myControler;
 
-private slots:
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
+private slots:   
+    void on_portBottom_clicked();
 
 private:
     Ui::MainWindow *ui;

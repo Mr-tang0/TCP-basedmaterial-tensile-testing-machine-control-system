@@ -12,21 +12,30 @@ public:
     explicit tcpClient(QObject *parent = nullptr);
 
     QStringList getNetWorkIP();
-    bool tcpConnect(QString IPAddress, int portNumber);
-    bool tcpDisconnect(QString IPAddress, QString portNumber);
+
+    bool isopen();
+
+    bool tcpConnect();
+    bool tcpDisconnect();
 
     bool sendMessage(QByteArray message);
 
+    TCPFrame messageToTrame(QByteArray message);
+
     static QTcpSocket *mySocket;
 
+    tcpClient_details details;
+
 private:
-    QString netWorkIP;
+    QByteArray readBuffer = "";
+    TCPFrame frame;
+    QTimer *timer = new QTimer;
 
 
 signals:
     void connected();
     void disconnected();
-    void readSomeMessage(QByteArray message);
+    void readSomeMessage(TCPFrame messageFrame);
 };
 
 #endif // TCPCLIENT_H
