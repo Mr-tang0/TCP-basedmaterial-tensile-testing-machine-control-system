@@ -52,6 +52,9 @@ color: rgb(255, 0, 4);
 }
 </string>
                </property>
+               <property name="digitCount">
+                <number>8</number>
+               </property>
               </widget>
              </item>
             </layout>
@@ -72,7 +75,11 @@ color: rgb(255, 0, 4);
               </widget>
              </item>
              <item>
-              <widget class="QLCDNumber" name="stress"/>
+              <widget class="QLCDNumber" name="stress">
+               <property name="digitCount">
+                <number>8</number>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -92,7 +99,11 @@ color: rgb(255, 0, 4);
               </widget>
              </item>
              <item>
-              <widget class="QLCDNumber" name="displacement"/>
+              <widget class="QLCDNumber" name="displacement">
+               <property name="digitCount">
+                <number>8</number>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -112,7 +123,14 @@ color: rgb(255, 0, 4);
               </widget>
              </item>
              <item>
-              <widget class="QLCDNumber" name="displacement_sensors"/>
+              <widget class="QLCDNumber" name="displacement_sensors">
+               <property name="smallDecimalPoint">
+                <bool>false</bool>
+               </property>
+               <property name="digitCount">
+                <number>8</number>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -132,7 +150,14 @@ color: rgb(255, 0, 4);
               </widget>
              </item>
              <item>
-              <widget class="QLCDNumber" name="strain"/>
+              <widget class="QLCDNumber" name="strain">
+               <property name="smallDecimalPoint">
+                <bool>false</bool>
+               </property>
+               <property name="digitCount">
+                <number>8</number>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -152,7 +177,11 @@ color: rgb(255, 0, 4);
               </widget>
              </item>
              <item>
-              <widget class="QLCDNumber" name="Duration"/>
+              <widget class="QLCDNumber" name="Duration">
+               <property name="digitCount">
+                <number>8</number>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>

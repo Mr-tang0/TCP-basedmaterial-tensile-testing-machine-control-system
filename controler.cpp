@@ -4,26 +4,35 @@ Controler::Controler(QObject *parent)
     : QObject{parent}
 {}
 
-bool Controler::open(tcpClient &myTcpClient)
+bool Controler::isConnected(tcpClient &myTcpClient)
 {
-    if(myTcpClient.isopen())
-    {
-        myTcpClient.sendMessage("I'm in Controler Already!");
-    }
-    return false;
+    return myTcpClient.isopen();
 }
 
+//连接控制器
 bool Controler::connectToControl(tcpClient &myTcpClient)
 {
     if(!myTcpClient.isopen())
     {
         return false;
     }
-    myTcpClient.sendMessage(cmd.CMD_connent.toUtf8());
+    return myTcpClient.sendMessage(cmd.CMD_connent.toUtf8());
 
-    return false;
 }
 
+//断开控制器
+bool Controler::disconnectToControl(tcpClient &myTcpClient)
+{
+    if(!myTcpClient.isopen())
+    {
+        return false;
+    }
+    return myTcpClient.sendMessage(cmd.CMD_disconnent.toUtf8());
+}
+
+
+
+//开环向上运动
 void Controler::openCircleControl_UP(tcpClient &myTcpClient,int controlSpeed,int controlChannal)
 {
     if(!myTcpClient.isopen())
@@ -34,12 +43,22 @@ void Controler::openCircleControl_UP(tcpClient &myTcpClient,int controlSpeed,int
     myTcpClient.sendMessage(cmd.CMD_openCircleControl.arg(controlChannal).arg(-controlSpeed).toUtf8());
 
 }
-void Controler::openCircleControl_DOWN(tcpClient &myTcpClient,int controlSpeed,int controlChannal)
+
+//开环停止运动
+void Controler::openCircleControl_STOP(tcpClient &myTcpClient,int controlChannal)
 {
     if(!myTcpClient.isopen())
     {
         return;
     }
+
+    myTcpClient.sendMessage(cmd.CMD_openCircleControl.arg(controlChannal).arg(0).toUtf8());
+}
+
+//开环向下运动
+void Controler::openCircleControl_DOWN(tcpClient &myTcpClient,int controlSpeed,int controlChannal)
+{
+
     if(!myTcpClient.isopen())
     {
         return;
@@ -48,6 +67,18 @@ void Controler::openCircleControl_DOWN(tcpClient &myTcpClient,int controlSpeed,i
     myTcpClient.sendMessage(cmd.CMD_openCircleControl.arg(controlChannal).arg(controlSpeed).toUtf8());
 }
 
+//闭环定长运动
+
+void Controler::closeCircleControl_length(tcpClient &myTcpClient,int controlSpeed,int controlLength,int controlChannal)
+{
+    if(!myTcpClient.isopen())
+    {
+        return;
+    }
+
+}
+
+//运动模式
 void Controler::mode_Reciprocate(tcpClient &myTcpClient)
 {
     if(!myTcpClient.isopen())

@@ -26,8 +26,11 @@ public:
 private slots:   
     void on_portBottom_clicked();
 
+    void on_portButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+    void initThis();
     // QtMaterialSnackbar  *const m_snackbar;
 };
 #endif // MAINWINDOW_H

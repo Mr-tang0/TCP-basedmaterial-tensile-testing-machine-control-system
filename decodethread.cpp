@@ -6,10 +6,35 @@ decodeThread::decodeThread(QObject *parent)
 
 }
 
-void decodeThread::decodeMessage(TCPFrame messageFrame)
+void decodeThread::MutiThreaddecodeMessage(QByteArray message,QList<int> decodeDataNumber)
 {
+    for (int i = 0; i < message.length()/218; i++)
+    {
+        TCPFrame frame = messageToTrame(message.left(218));
+        message.remove(0,218);
+        QList<float> decodeData;
+        foreach (int item, decodeDataNumber) {
+            float decode = dataToFloat(frame.data[item]);
+            decodeData.append(decode);
+        }
+        emit decodeDone(decodeData);
+    }
 
+    emit finished();
+}
 
+TCPFrame decodeThread::messageToTrame(QByteArray message)
+{
+    TCPFrame tempFrame;
+    tempFrame.header = message.mid(0,10);
+    tempFrame.tail = message.right(4);
+
+    for(int i = 0;i<51;i++)
+    {
+        tempFrame.data.append(message.mid(10+4*i,4));
+    }
+
+    return tempFrame;
 }
 
 float decodeThread::dataToFloat(QByteArray data)//小端数据

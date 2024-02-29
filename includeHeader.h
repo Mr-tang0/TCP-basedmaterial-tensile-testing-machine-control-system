@@ -8,10 +8,17 @@
 #include <QNetworkInterface>
 
 #include <QVBoxLayout>
-#include <QtEndian>
 #include <QDataStream>
 #include <QTimer>
-#include<QRect>
+
+#include <QtCore/QRandomGenerator>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+#include <QtCharts/QChart>
+#include <QtCharts/QChartView>
+#include<QThread>
+
+
 
 struct tcpClient_details
 {

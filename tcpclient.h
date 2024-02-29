@@ -35,7 +35,7 @@ private:
 signals:
     void connected();
     void disconnected();
-    void readSomeMessage(TCPFrame messageFrame);
+
 };
 
 #endif // TCPCLIENT_H

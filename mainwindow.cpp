@@ -14,18 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-
-    systemSetWidget *system = new systemSetWidget;
-    testWidget *test = new testWidget;
-
-    QVBoxLayout *layout = new QVBoxLayout;
-    delete ui->sonWidget->layout();
-
-    layout->addWidget(test);
-    ui->sonWidget->setLayout(layout);
-    test->show();
-
-
+    initThis();
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +22,26 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::initThis()
+{
+    systemSetWidget *system = new systemSetWidget;
+    testWidget *test = new testWidget;
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    delete ui->sonWidget->layout();
+
+    layout->addWidget(test);
+    layout->addWidget(system);
+
+
+    ui->sonWidget->setLayout(layout);
+
+    test->show();
+    system->hide();
+
+
+
+}
 
 
 void MainWindow::on_portBottom_clicked()
@@ -44,9 +53,12 @@ void MainWindow::on_portBottom_clicked()
 
     myClient->tcpConnect();
 
-    connect(myClient,&tcpClient::readSomeMessage,[=](TCPFrame messageFrame){
-        decodeThread decode;
-        // ui->lcdNumber->display(decode.dataToFloat(messageFrame.data[0]));
-    });
+}
+
+
+void MainWindow::on_portButton_clicked()
+{
+    ui->portButton->raise();
+    ui->portButton->move(100,100);
 }
 

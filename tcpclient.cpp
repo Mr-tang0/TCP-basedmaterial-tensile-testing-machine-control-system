@@ -1,5 +1,5 @@
 ﻿#include "tcpclient.h"
-
+#include "decodethread.h"
 
 QTcpSocket *tcpClient::mySocket = new QTcpSocket;
 
@@ -8,12 +8,43 @@ tcpClient::tcpClient(QObject *parent)
     : QObject{parent}
 {
 
+    //计时器处理接收
     connect(timer,&QTimer::timeout,this,[=](){
         QByteArray message = mySocket->readAll();
         readBuffer = readBuffer + message;
         if(readBuffer.length()>=218)
         {
-            emit readSomeMessage(messageToTrame(readBuffer.mid(0,218)));
+            decodeThread *decode = new decodeThread;
+            decode->MutiThreaddecodeMessage(readBuffer.mid(0,218),{1,23});
+            connect(decode,&decodeThread::decodeDone,[=](QList<float> temp){
+                qDebug()<<temp;//此为处理回的数据
+            });
+            readBuffer.clear();
+        }
+    });
+
+    //多线程处理接收
+    connect(mySocket,&QTcpSocket::readyRead,this,[=](){
+        QByteArray message = mySocket->readAll();
+        readBuffer = readBuffer + message;
+        if(readBuffer.length()%218==0)
+        {
+            QThread *tempthread = new QThread;
+            decodeThread *decode = new decodeThread;
+
+            decode->moveToThread(tempthread);
+            decode->MutiThreaddecodeMessage(readBuffer,{1,23});
+
+            //线程安全退出，要是删除等着电脑卡死
+            connect(decode,&decodeThread::finished,tempthread,&QObject::deleteLater);
+            connect(tempthread,&QThread::destroyed,tempthread,&QThread::quit);
+            tempthread->start();
+
+
+            connect(decode,&decodeThread::decodeDone,[=](QList<float> temp){
+                qDebug()<<temp;//此为处理回的数据
+            });
+
             readBuffer.clear();
         }
     });
@@ -34,6 +65,7 @@ QStringList tcpClient::getNetWorkIP()
     }
     return IPList;
 }
+
 bool tcpClient::tcpConnect()
 {
     QString IPAddress = details.netWorkIP;
@@ -42,7 +74,7 @@ bool tcpClient::tcpConnect()
     mySocket->connectToHost(QHostAddress(IPAddress),portNumber);
     connect(mySocket,&QTcpSocket::connected,this, [=](){
         qDebug()<<"connected!";
-        timer->start(1000/details.sampleRate);
+        // timer->start(1000/details.sampleRate);//这个是开启接受计时器，由于传感器发送数据过快，为避免拥堵，按照设置采样率去接受处理
         emit connected();
     });
     connect(mySocket,&QTcpSocket::disconnected,this,[=](){
@@ -69,17 +101,4 @@ bool tcpClient::sendMessage(QByteArray message)
 
 }
 
-TCPFrame tcpClient::messageToTrame(QByteArray message)
-{
-    TCPFrame tempFrame;
-    tempFrame.header = message.mid(0,10);
-    tempFrame.tail = message.right(4);
-
-    for(int i = 0;i<51;i++)
-    {
-        tempFrame.data.append(message.mid(10+4*i,4));
-    }
-
-    return tempFrame;
-}
 

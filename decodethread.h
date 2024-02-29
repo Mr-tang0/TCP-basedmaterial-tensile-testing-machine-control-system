@@ -9,11 +9,16 @@ class decodeThread : public QObject
     Q_OBJECT
 public:
     explicit decodeThread(QObject *parent = nullptr);
-    void decodeMessage(TCPFrame messageFrame);
+
+    void MutiThreaddecodeMessage(QByteArray message,QList<int> decodeDataNumber);
+
+    TCPFrame messageToTrame(QByteArray message);
     float dataToFloat(QByteArray data);
 
 
 signals:
+    void finished();
+    void decodeDone(QList<float> decodedData);
 };
 
 #endif // DECODETHREAD_H
