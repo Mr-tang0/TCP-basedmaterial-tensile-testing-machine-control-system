@@ -8,8 +8,10 @@ decodeThread::decodeThread(QObject *parent)
 
 void decodeThread::MutiThreaddecodeMessage(QByteArray message,QList<int> decodeDataNumber)
 {
+
     for (int i = 0; i < message.length()/218; i++)
     {
+
         TCPFrame frame = messageToTrame(message.left(218));
         message.remove(0,218);
         QList<float> decodeData;
@@ -18,6 +20,7 @@ void decodeThread::MutiThreaddecodeMessage(QByteArray message,QList<int> decodeD
             decodeData.append(decode);
         }
         emit decodeDone(decodeData);
+        // qDebug()<<decodeData;
     }
 
     emit finished();

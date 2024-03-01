@@ -5,6 +5,9 @@
 #include "tcpclient.h"
 #include "controler.h"
 #include "includeHeader.h"
+#include "testwidget.h"
+#include "newtestwidget.h"
+#include "systemsetwidget.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -24,13 +27,18 @@ public:
     static Controler *myControler;
 
 private slots:   
-    void on_portBottom_clicked();
-
     void on_portButton_clicked();
+
+    void on_actionNew_triggered();
 
 private:
     Ui::MainWindow *ui;
     void initThis();
+
+    testWidget *test = new testWidget;
+
+    systemSetWidget *system = new systemSetWidget;
+    newTestWidget *newTest = new newTestWidget;
     // QtMaterialSnackbar  *const m_snackbar;
 };
 #endif // MAINWINDOW_H

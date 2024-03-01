@@ -17,8 +17,9 @@
 #include <QtCharts/QChart>
 #include <QtCharts/QChartView>
 #include<QThread>
+#include <QEventLoop>
 
-
+#include <QtCore/qmath.h>
 
 struct tcpClient_details
 {
@@ -53,6 +54,48 @@ struct motorDetails
 
     double zero;//约定0点
     double Backlash;//背隙补偿值
+};
+
+struct waveformControlDetails
+{
+    int amplitudeMaintain = 0;//幅度保持
+
+    int waveType = 1;//波形
+
+    float initialAngle = 0;//波形初始角度
+
+    float frequency = 1;//波形频率
+
+    int controlChannal = 10;//控制通道
+
+    int targetChannal = 10;//目标通道
+
+    float amplitude_top = 40;//上下幅值
+    float amplitude_bottom = 30;//上下幅值
+
+    int waveNumber = 100;//波形次数
+
+    float controlSpeed = 1;//波形初始速率
+
+    int closeCircleChannal = 3;//输出通道
+
+};
+
+struct lengthControlDetails
+{
+    int controlChannal = 10;//控制通道
+
+    float controlSpeed = 1;//控制速度
+
+    int targetChannal =10;//目标通道
+
+    float targetValue =35;//目标值
+
+    int finishAction = 1;//动作
+
+    float holdTime = 10;//持续时间
+
+    int closeCircleChannal = 3;//输出通道
 
 };
 

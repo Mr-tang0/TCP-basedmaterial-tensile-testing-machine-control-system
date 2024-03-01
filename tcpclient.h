@@ -30,11 +30,16 @@ private:
     QByteArray readBuffer = "";
     TCPFrame frame;
     QTimer *timer = new QTimer;
+    int kk;
 
+private slots:
+    void MutiDecode();
 
 signals:
     void connected();
     void disconnected();
+    void decodeDone(QList<float> decodedData);
+
 
 };
 

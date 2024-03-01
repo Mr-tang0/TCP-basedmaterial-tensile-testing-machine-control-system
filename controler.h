@@ -19,12 +19,18 @@ public:
     bool connectToControl(tcpClient &myTcpClient);
     bool disconnectToControl(tcpClient &myTcpClient);
 
-    void openCircleControl_UP(tcpClient &myTcpClient,int controlSpeed,int controlChannal);
+    void openCircleControl(tcpClient &myTcpClient,int controlSpeed,int controlChannal);
     void openCircleControl_STOP(tcpClient &myTcpClient,int controlChannal);
-    void openCircleControl_DOWN(tcpClient &myTcpClient,int controlSpeed,int controlChannal);
 
-    void closeCircleControl_length(tcpClient &myTcpClient,int controlSpeed,int controlLength,int controlChannal);
-    void closeCircleControl_speed(tcpClient &myTcpClient,int controlSpeed,int controlChannal);
+
+    void closeCircleControl_Length(tcpClient &myTcpClient,lengthControlDetails detail);
+    void closeCircleControl_Wave(tcpClient &myTcpClient,waveformControlDetails detail);
+    void closeCircleControl_Speed();
+    void closeCircleControl_STOP(tcpClient &myTcpClient,int channal);
+
+
+
+
 
     void mode_Stretch(tcpClient &myTcpClient);//拉伸运动
     void mode_Compress(tcpClient &myTcpClient);//压缩运动
@@ -36,6 +42,8 @@ public:
 
 private:
     controlCommand cmd;
+    void delay(int delayTime);
+
 signals:
 };
 

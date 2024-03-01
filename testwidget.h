@@ -18,6 +18,9 @@ public:
     ~testWidget();
     Controler *myControler = new Controler;
 
+public slots:
+    void fresh(QList<float> decodeData);
+
 private slots:
     void on_pushButton_clicked();
 
@@ -26,6 +29,8 @@ private slots:
     void on_stop_clicked();
 
     void on_down_clicked();
+
+    void on_startTest_clicked();
 
 private:
     Ui::testWidget *ui;

@@ -20,6 +20,7 @@ SOURCES += \
     decodethread.cpp \
     main.cpp \
     mainwindow.cpp \
+    newtestwidget.cpp \
     systemsetwidget.cpp \
     tcpclient.cpp \
     testwidget.cpp
@@ -31,12 +32,14 @@ HEADERS += \
     decodethread.h \
     includeHeader.h \
     mainwindow.h \
+    newtestwidget.h \
     systemsetwidget.h \
     tcpclient.h \
     testwidget.h
 
 FORMS += \
     mainwindow.ui \
+    newtestwidget.ui \
     systemsetwidget.ui \
     testwidget.ui
 
