@@ -13,38 +13,39 @@ class Controler : public QObject
 public:
     explicit Controler(QObject *parent = nullptr);
 
+    static tcpClient *myClient;
 
-    bool isConnected(tcpClient &myTcpClient);
+    bool isConnected();
 
-    bool connectToControl(tcpClient &myTcpClient);
-    bool disconnectToControl(tcpClient &myTcpClient);
+    bool connectToControl();
+    bool disconnectToControl();
 
-    void openCircleControl(tcpClient &myTcpClient,int controlSpeed,int controlChannal);
-    void openCircleControl_STOP(tcpClient &myTcpClient,int controlChannal);
+    void openCircleControl(int controlSpeed,int controlChannal);
+    void openCircleControl_STOP(int controlChannal);
 
 
-    void closeCircleControl_Length(tcpClient &myTcpClient,lengthControlDetails detail);
-    void closeCircleControl_Wave(tcpClient &myTcpClient,waveformControlDetails detail);
+    void closeCircleControl_Length(lengthControlDetails detail);
+    void closeCircleControl_Wave(waveformControlDetails detail);
     void closeCircleControl_Speed();
-    void closeCircleControl_STOP(tcpClient &myTcpClient,int channal);
+    void closeCircleControl_STOP(int channal);
 
 
 
 
 
-    void mode_Stretch(tcpClient &myTcpClient);//拉伸运动
-    void mode_Compress(tcpClient &myTcpClient);//压缩运动
-    void mode_Reciprocate(tcpClient &myTcpClient);//往复运动
+    void mode_Stretch();//拉伸运动
+    void mode_Compress();//压缩运动
+    void mode_Reciprocate();//往复运动
 
 
-    bool close(tcpClient &myTcpClient);
-    bool stop(tcpClient &myTcpClient);
+    bool close();
+    bool stop();
 
 private:
     controlCommand cmd;
     void delay(int delayTime);
-
 signals:
+    void decodeDone(QList<float> decodedData);
 };
 
 #endif // CONTROLER_H

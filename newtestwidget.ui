@@ -89,7 +89,14 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit"/>
+            <widget class="QLineEdit" name="userName_lineEidt">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>35</height>
+              </size>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="horizontalSpacer_11">
@@ -112,7 +119,13 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_4">
+            <widget class="QLineEdit" name="number_lineEidt">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>35</height>
+              </size>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -139,7 +152,14 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_2"/>
+            <widget class="QLineEdit" name="time_lineEidt">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>35</height>
+              </size>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="horizontalSpacer_14">
@@ -204,7 +224,20 @@
                    <item>
                     <layout class="QVBoxLayout" name="verticalLayout_7">
                      <item>
-                      <widget class="QRadioButton" name="radioButton">
+                      <spacer name="horizontalSpacer_20">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <widget class="QRadioButton" name="pull_radioButton">
                        <property name="text">
                         <string>拉伸</string>
                        </property>
@@ -224,7 +257,7 @@
                       </spacer>
                      </item>
                      <item>
-                      <widget class="QRadioButton" name="radioButton_2">
+                      <widget class="QRadioButton" name="push_radioButton">
                        <property name="text">
                         <string>压缩</string>
                        </property>
@@ -244,21 +277,21 @@
                       </spacer>
                      </item>
                      <item>
-                      <widget class="QRadioButton" name="radioButton_3">
+                      <widget class="QRadioButton" name="fatigue_radioButton">
                        <property name="text">
                         <string>疲劳</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <spacer name="verticalSpacer_2">
+                      <spacer name="horizontalSpacer_21">
                        <property name="orientation">
-                        <enum>Qt::Vertical</enum>
+                        <enum>Qt::Horizontal</enum>
                        </property>
                        <property name="sizeHint" stdset="0">
                         <size>
-                         <width>20</width>
-                         <height>40</height>
+                         <width>40</width>
+                         <height>20</height>
                         </size>
                        </property>
                       </spacer>
@@ -281,12 +314,12 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QStackedWidget" name="stackedWidget">
+                  <widget class="QStackedWidget" name="testTypeManu_stackedWidget">
                    <property name="styleSheet">
                     <string notr="true"/>
                    </property>
                    <property name="currentIndex">
-                    <number>2</number>
+                    <number>0</number>
                    </property>
                    <widget class="QWidget" name="page">
                     <layout class="QGridLayout" name="gridLayout">
@@ -295,18 +328,57 @@
                        <item>
                         <layout class="QVBoxLayout" name="verticalLayout">
                          <item>
+                          <spacer name="horizontalSpacer_22">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                         <item>
                           <widget class="QLabel" name="label_8">
                            <property name="text">
-                            <string>拉伸距离（mm）</string>
+                            <string>拉伸/压缩距离（mm）</string>
                            </property>
                           </widget>
                          </item>
                          <item>
+                          <spacer name="horizontalSpacer_16">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                         <item>
                           <widget class="QLabel" name="label_9">
                            <property name="text">
-                            <string>拉伸速度（mm/s）</string>
+                            <string>拉伸/压缩速度（mm/s）</string>
                            </property>
                           </widget>
+                         </item>
+                         <item>
+                          <spacer name="horizontalSpacer_17">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
                          </item>
                          <item>
                           <widget class="QLabel" name="label_10">
@@ -315,64 +387,95 @@
                            </property>
                           </widget>
                          </item>
+                         <item>
+                          <spacer name="horizontalSpacer_23">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
                         </layout>
                        </item>
                        <item>
                         <layout class="QVBoxLayout" name="verticalLayout_2">
                          <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+                          <spacer name="horizontalSpacer_25">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
                          </item>
                          <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
-                         </item>
-                         <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
-                         </item>
-                        </layout>
-                       </item>
-                      </layout>
-                     </item>
-                    </layout>
-                   </widget>
-                   <widget class="QWidget" name="page_2">
-                    <layout class="QGridLayout" name="gridLayout_2">
-                     <item row="0" column="0">
-                      <layout class="QHBoxLayout" name="horizontalLayout_3">
-                       <item>
-                        <layout class="QVBoxLayout" name="verticalLayout_3">
-                         <item>
-                          <widget class="QLabel" name="label_13">
-                           <property name="text">
-                            <string>压缩距离（mm）</string>
+                          <widget class="QDoubleSpinBox" name="length_doubleSpinBox">
+                           <property name="decimals">
+                            <number>4</number>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLabel" name="label_12">
-                           <property name="text">
-                            <string>压缩速度（mm/s）</string>
+                          <spacer name="horizontalSpacer_18">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                         <item>
+                          <widget class="QDoubleSpinBox" name="speed_doubleSpinBox_2">
+                           <property name="decimals">
+                            <number>4</number>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLabel" name="label_11">
-                           <property name="text">
-                            <string>限制最大力（N）</string>
+                          <spacer name="horizontalSpacer_19">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                         <item>
+                          <widget class="QDoubleSpinBox" name="force_doubleSpinBox_3">
+                           <property name="decimals">
+                            <number>4</number>
                            </property>
                           </widget>
                          </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QVBoxLayout" name="verticalLayout_4">
                          <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
-                         </item>
-                         <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
-                         </item>
-                         <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+                          <spacer name="horizontalSpacer_24">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
                          </item>
                         </layout>
                        </item>
@@ -433,7 +536,7 @@
                        <item>
                         <layout class="QVBoxLayout" name="verticalLayout_5">
                          <item>
-                          <widget class="QComboBox" name="comboBox_2">
+                          <widget class="QComboBox" name="waveType_comboBox">
                            <item>
                             <property name="text">
                              <string>正弦波</string>
@@ -452,42 +555,42 @@
                           </widget>
                          </item>
                          <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_8"/>
+                          <widget class="QDoubleSpinBox" name="cycleLength_doubleSpinBox_8"/>
                          </item>
                          <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_9"/>
+                          <widget class="QDoubleSpinBox" name="cicleSpeed_doubleSpinBox_9"/>
                          </item>
                          <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_10"/>
+                          <widget class="QDoubleSpinBox" name="circleTime_doubleSpinBox_10"/>
                          </item>
                          <item>
-                          <widget class="QDoubleSpinBox" name="doubleSpinBox_11"/>
+                          <widget class="QDoubleSpinBox" name="circleFrequecy_doubleSpinBox_11"/>
                          </item>
                          <item>
-                          <widget class="QSpinBox" name="spinBox"/>
+                          <widget class="QSpinBox" name="circleNumber_spinBox"/>
                          </item>
                         </layout>
                        </item>
                       </layout>
-                     </item>
-                     <item row="1" column="0">
-                      <spacer name="horizontalSpacer_15">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
                      </item>
                     </layout>
                    </widget>
                   </widget>
                  </item>
                 </layout>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_15">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -499,7 +602,13 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QComboBox" name="comboBox">
+                  <widget class="QComboBox" name="stopAction_comboBox">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>35</height>
+                    </size>
+                   </property>
                    <item>
                     <property name="text">
                      <string>固定时间（s）</string>
@@ -525,10 +634,10 @@
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout">
                    <item>
-                    <widget class="QDoubleSpinBox" name="doubleSpinBox_12"/>
+                    <widget class="QDoubleSpinBox" name="stopActionValue_doubleSpinBox_12"/>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_20">
+                    <widget class="QLabel" name="unit_label">
                      <property name="text">
                       <string>s</string>
                      </property>
@@ -555,50 +664,27 @@
              </item>
              <item>
               <layout class="QGridLayout" name="gridLayout_4">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_21">
+               <item row="0" column="2">
+                <widget class="QPushButton" name="chooseFilePath_pushButton">
                  <property name="text">
-                  <string>采样率</string>
+                  <string>选择</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <widget class="QSpinBox" name="spinBox_2">
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>150</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
+               <item row="0" column="0">
                 <widget class="QLabel" name="label_22">
                  <property name="text">
                   <string>自定义文件位置</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="lineEdit_5">
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="filePath_lineEdit">
                  <property name="minimumSize">
                   <size>
                    <width>400</width>
                    <height>35</height>
                   </size>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <widget class="QPushButton" name="pushButton_3">
-                 <property name="text">
-                  <string>选择</string>
                  </property>
                 </widget>
                </item>

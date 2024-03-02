@@ -8,7 +8,8 @@
 #include "testwidget.h"
 #include "newtestwidget.h"
 #include "systemsetwidget.h"
-
+#include "worker.h"
+#include"decodethread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,20 +24,22 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    static tcpClient *myClient;
+
     static Controler *myControler;
+    static worker *myWorker;
+    void initThis();
 
 private slots:   
     void on_portButton_clicked();
 
     void on_actionNew_triggered();
 
+
 private:
     Ui::MainWindow *ui;
-    void initThis();
+
 
     testWidget *test = new testWidget;
-
     systemSetWidget *system = new systemSetWidget;
     newTestWidget *newTest = new newTestWidget;
     // QtMaterialSnackbar  *const m_snackbar;

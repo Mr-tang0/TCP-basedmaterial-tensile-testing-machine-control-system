@@ -18,15 +18,15 @@ struct controlCommand
 
     QString CMD_controlSpeed = "W011,%1;";//控制速度
 
-    QString CMD_targetChannal = "W12,%1;";//目标通道
+    QString CMD_targetChannal = "W012,%1;";//目标通道
 
-    QString CMD_targetValue = "W13,%1;";//目标值
+    QString CMD_targetValue = "W013,%1;";//目标值
 
-    QString CMD_targetAction = "W14,%1;";//动作
+    QString CMD_targetAction = "W014,%1;";//动作
 
-    QString CMD_holdTime = "W15,%1;";//持续时间
+    QString CMD_holdTime = "W015,%1;";//持续时间
 
-    QString CMD_outputChannal = "W004,%1";//输出通道
+    QString CMD_outputChannal = "W004,%1;";//输出通道
 
 
     QString CMD_amplitudeMaintain = "W%1,%2";//幅度保持开关
@@ -45,6 +45,8 @@ struct controlCommand
 
 
     QString CMD_outputPos = "W16,%1;";
+
+    QString CMD_TimeClear = "W160,0;";
 
 };
 

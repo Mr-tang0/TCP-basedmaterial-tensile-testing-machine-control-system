@@ -16,7 +16,7 @@ tcpClient::tcpClient(QObject *parent)
         readBuffer = readBuffer + message;
         if(readBuffer.length()>=218)
         {
-            decode->MutiThreaddecodeMessage(readBuffer.mid(0,218),{0,10});
+            decode->MutiThreaddecodeMessage(readBuffer.mid(0,218),{0,10,29});
             readBuffer.clear();
         }
     });
@@ -48,28 +48,28 @@ tcpClient::tcpClient(QObject *parent)
 }
 void tcpClient::MutiDecode()
 {
-    qDebug()<<kk;
-    decodeThread *decode = new decodeThread;
-    QThread *tempthread = new QThread;
+    // qDebug()<<kk;
+    // decodeThread *decode = new decodeThread;
+    // QThread *tempthread = new QThread;
 
-    decode->moveToThread(tempthread);
-    decode->MutiThreaddecodeMessage(readBuffer,{1,23});
+    // decode->moveToThread(tempthread);
+    // decode->MutiThreaddecodeMessage(readBuffer,{1,23});
 
-    tempthread->start();
+    // tempthread->start();
 
-    connect(decode,&decodeThread::finished,[=](){
-        // tempthread->deleteLater();
-        // decode->deleteLater();
-        kk = kk-1;
-        qDebug()<<"delete";
-    });
-    connect(tempthread,&QThread::destroyed,tempthread,&QThread::quit);
+    // connect(decode,&decodeThread::finished,[=](){
+    //     // tempthread->deleteLater();
+    //     // decode->deleteLater();
+    //     kk = kk-1;
+    //     qDebug()<<"delete";
+    // });
+    // connect(tempthread,&QThread::destroyed,tempthread,&QThread::quit);
 
     // connect(decode,&decodeThread::decodeDone,[=](QList<float> temp){
     //     qDebug()<<temp;//此为处理回的数据
     // });
 
-    readBuffer.clear();
+    // readBuffer.clear();
 }
 
 bool tcpClient::isopen()
@@ -93,6 +93,7 @@ bool tcpClient::tcpConnect()
     int portNumber = details.portNumber;
 
     mySocket->connectToHost(QHostAddress(IPAddress),portNumber);
+
     connect(mySocket,&QTcpSocket::connected,this, [=](){
         qDebug()<<"connected!";
         timer->start(1000/details.sampleRate);//这个是开启接受计时器，由于传感器发送数据过快，为避免拥堵，按照设置采样率去接受处理

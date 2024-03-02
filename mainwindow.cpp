@@ -1,10 +1,8 @@
-﻿#include "mainwindow.h"192
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include"decodethread.h"
-
-tcpClient *MainWindow::myClient = new tcpClient;
 Controler *MainWindow::myControler = new Controler;
+worker *MainWindow::myWorker = new worker;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -35,17 +33,18 @@ void MainWindow::initThis()
     test->show();
     system->hide();
     newTest->hide();
+    connect(newTest,&newTestWidget::thisHide,this,[=](){
+        test->show();
+        system->hide();
+        newTest->hide();
+    });
 
 }
 
 void MainWindow::on_portButton_clicked()
 {
-    myClient->details.netWorkIP = "192.168.0.20";
-    myClient->details.portNumber = 6000;
-    myClient->details.sampleRate = 20;
-
-    myClient->tcpConnect();
-    connect(myClient,&tcpClient::decodeDone,test,&testWidget::fresh);
+    myControler->connectToControl();
+    connect(myControler,&Controler::decodeDone,test,&testWidget::fresh);//连接解码和界面
 }
 
 
@@ -55,4 +54,6 @@ void MainWindow::on_actionNew_triggered()
     system->hide();
     newTest->show();
 }
+
+
 

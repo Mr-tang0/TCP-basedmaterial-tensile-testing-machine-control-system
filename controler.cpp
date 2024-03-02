@@ -1,140 +1,154 @@
 ﻿#include "controler.h"
 
+tcpClient *Controler::myClient = new tcpClient;
+
 Controler::Controler(QObject *parent)
     : QObject{parent}
-{}
-
-bool Controler::isConnected(tcpClient &myTcpClient)
 {
-    return myTcpClient.isopen();
+
+
+}
+
+bool Controler::isConnected()
+{
+    return myClient->isopen();
 }
 
 //连接控制器
-bool Controler::connectToControl(tcpClient &myTcpClient)
+bool Controler::connectToControl()
 {
-    if(!myTcpClient.isopen())
+    myClient->details.netWorkIP = "192.168.0.20";
+    myClient->details.portNumber = 6000;
+    myClient->details.sampleRate = 20;
+
+    myClient->tcpConnect();
+
+    if(!myClient->isopen())
     {
         return false;
     }
-    return myTcpClient.sendMessage(cmd.CMD_connent.toUtf8());
+    connect(myClient,&tcpClient::decodeDone,this,[=](QList<float> decodedData){
+        emit decodeDone(decodedData);
+    });
+    return myClient->sendMessage(cmd.CMD_connent.toUtf8());
 
 }
 
 //断开控制器
-bool Controler::disconnectToControl(tcpClient &myTcpClient)
+bool Controler::disconnectToControl()
 {
-    if(!myTcpClient.isopen())
+    if(!myClient->isopen())
     {
         return false;
     }
-    return myTcpClient.sendMessage(cmd.CMD_disconnent.toUtf8());
+    return myClient->sendMessage(cmd.CMD_disconnent.toUtf8());
 }
 
 
 //开环向上运动
-void Controler::openCircleControl(tcpClient &myTcpClient,int controlSpeed,int controlChannal)
+void Controler::openCircleControl(int controlSpeed,int controlChannal)
 {
-    if(!myTcpClient.isopen())
+    if(!myClient->isopen())
     {
         return;
     }
 
-    myTcpClient.sendMessage(cmd.CMD_openCircleControl.arg(controlChannal).arg(controlSpeed).toUtf8());
+    myClient->sendMessage(cmd.CMD_openCircleControl.arg(controlChannal).arg(controlSpeed).toUtf8());
 
 }
 
 //开环停止运动
-void Controler::openCircleControl_STOP(tcpClient &myTcpClient,int controlChannal)
+void Controler::openCircleControl_STOP(int controlChannal)
 {
-    if(!myTcpClient.isopen())
+    if(!myClient->isopen())
     {
         return;
     }
 
-    myTcpClient.sendMessage(cmd.CMD_openCircleControl.arg(controlChannal).arg(0).toUtf8());
+    myClient->sendMessage(cmd.CMD_openCircleControl.arg(controlChannal).arg(0).toUtf8());
 }
 
 
 //常规闭环运动
 
-void Controler::closeCircleControl_Length(tcpClient &myTcpClient,lengthControlDetails detail)
+void Controler::closeCircleControl_Length(lengthControlDetails detail)
 {
-    if(!myTcpClient.isopen())
+    if(!myClient->isopen())
     {
         return;
     }
     //波形0
-    myTcpClient.sendMessage(cmd.CMD_generalControl.arg(0).toUtf8());
+    myClient->sendMessage(cmd.CMD_generalControl.arg(0).toUtf8());
     //控制通道
-    myTcpClient.sendMessage(cmd.CMD_controlChannal.arg(detail.controlChannal).toUtf8());
+    myClient->sendMessage(cmd.CMD_controlChannal.arg(detail.controlChannal).toUtf8());
     //控制速率
-    myTcpClient.sendMessage(cmd.CMD_controlSpeed.arg(detail.controlSpeed).toUtf8());
+    myClient->sendMessage(cmd.CMD_controlSpeed.arg(detail.controlSpeed).toUtf8());
     //目标通道
-    myTcpClient.sendMessage(cmd.CMD_targetChannal.arg(detail.targetChannal).toUtf8());
+    myClient->sendMessage(cmd.CMD_targetChannal.arg(detail.targetChannal).toUtf8());
     //目标值
-    myTcpClient.sendMessage(cmd.CMD_targetValue.arg(detail.targetValue).toUtf8());
+    myClient->sendMessage(cmd.CMD_targetValue.arg(detail.targetValue).toUtf8());
     //到达动作
-    myTcpClient.sendMessage(cmd.CMD_targetAction.arg(detail.finishAction).toUtf8());
+    myClient->sendMessage(cmd.CMD_targetAction.arg(detail.finishAction).toUtf8());
     //保持时间
-    myTcpClient.sendMessage(cmd.CMD_holdTime.arg(detail.holdTime).toUtf8());
+    myClient->sendMessage(cmd.CMD_holdTime.arg(detail.holdTime).toUtf8());
     //DA通道
-    myTcpClient.sendMessage(cmd.CMD_outputChannal.arg(detail.closeCircleChannal).toUtf8());
+    myClient->sendMessage(cmd.CMD_outputChannal.arg(detail.closeCircleChannal).toUtf8());
     //开始
-    myTcpClient.sendMessage(cmd.CMD_stopOrStart.arg(qPow(2,detail.closeCircleChannal)).toUtf8());
+    myClient->sendMessage(cmd.CMD_stopOrStart.arg(qPow(2,detail.closeCircleChannal)).toUtf8());
 
 }
-void Controler::closeCircleControl_Wave(tcpClient &myTcpClient,waveformControlDetails detail)
+void Controler::closeCircleControl_Wave(waveformControlDetails detail)
 {
-    if(!myTcpClient.isopen())
+    if(!myClient->isopen())
     {
         return;
     }
 
     //幅度保持开关
-    myTcpClient.sendMessage(cmd.CMD_amplitudeMaintain.arg(484+detail.closeCircleChannal).arg(detail.amplitudeMaintain).toUtf8());
+    myClient->sendMessage(cmd.CMD_amplitudeMaintain.arg(484+detail.closeCircleChannal).arg(detail.amplitudeMaintain).toUtf8());
 
     //波形0
-    myTcpClient.sendMessage(cmd.CMD_generalControl.arg(detail.waveType).toUtf8());
+    myClient->sendMessage(cmd.CMD_generalControl.arg(detail.waveType).toUtf8());
 
     //波形初始角度
-    myTcpClient.sendMessage(cmd.CMD_initAngle.arg(detail.initialAngle).toUtf8());
+    myClient->sendMessage(cmd.CMD_initAngle.arg(detail.initialAngle).toUtf8());
 
     //波形频率
-    myTcpClient.sendMessage(cmd.CMD_frequency.arg(detail.frequency).toUtf8());
+    myClient->sendMessage(cmd.CMD_frequency.arg(detail.frequency).toUtf8());
 
     //控制通道
-    myTcpClient.sendMessage(cmd.CMD_controlChannal.arg(detail.controlChannal).toUtf8());
+    myClient->sendMessage(cmd.CMD_controlChannal.arg(detail.controlChannal).toUtf8());
 
     //目标通道
-    myTcpClient.sendMessage(cmd.CMD_targetChannal.arg(detail.targetChannal).toUtf8());
+    myClient->sendMessage(cmd.CMD_targetChannal.arg(detail.targetChannal).toUtf8());
 
     //波形上幅值
-    myTcpClient.sendMessage(cmd.CMD_amplitude_top.arg(detail.amplitude_top).toUtf8());
+    myClient->sendMessage(cmd.CMD_amplitude_top.arg(detail.amplitude_top).toUtf8());
 
     //波形下幅值
-    myTcpClient.sendMessage(cmd.CMD_amplitude_bottom.arg(detail.amplitude_bottom).toUtf8());
+    myClient->sendMessage(cmd.CMD_amplitude_bottom.arg(detail.amplitude_bottom).toUtf8());
 
     //波形数量
-    myTcpClient.sendMessage(cmd.CMD_waveNumber.arg(detail.waveNumber).toUtf8());
+    myClient->sendMessage(cmd.CMD_waveNumber.arg(detail.waveNumber).toUtf8());
 
     //波形初始速率
-    myTcpClient.sendMessage(cmd.CMD_initControlSpeed.arg(detail.controlSpeed).toUtf8());
+    myClient->sendMessage(cmd.CMD_initControlSpeed.arg(detail.controlSpeed).toUtf8());
 
     //DA通道
-    myTcpClient.sendMessage(cmd.CMD_outputChannal.arg(detail.closeCircleChannal).toUtf8());
+    myClient->sendMessage(cmd.CMD_outputChannal.arg(detail.closeCircleChannal).toUtf8());
 
     //开始
-    myTcpClient.sendMessage(cmd.CMD_stopOrStart.arg(512+qPow(2,detail.closeCircleChannal)).toUtf8());
+    myClient->sendMessage(cmd.CMD_stopOrStart.arg(512+qPow(2,detail.closeCircleChannal)).toUtf8());
 }
 
-void Controler::closeCircleControl_STOP(tcpClient &myTcpClient,int channal)
+void Controler::closeCircleControl_STOP(int channal)
 {
-    if(!myTcpClient.isopen())
+    if(!myClient->isopen())
     {
         return;
     }
     //停止
-    myTcpClient.sendMessage(cmd.CMD_stopOrStart.arg(256+qPow(2,channal)).toUtf8());
+    myClient->sendMessage(cmd.CMD_stopOrStart.arg(256+qPow(2,channal)).toUtf8());
 
 }
 
@@ -149,19 +163,19 @@ void Controler::delay(int delayTime)
 }
 
 //运动模式
-void Controler::mode_Reciprocate(tcpClient &myTcpClient)
+void Controler::mode_Reciprocate()
 {
-    if(!myTcpClient.isopen())
+    if(!myClient->isopen())
     {
         return;
     }
-    myTcpClient.sendMessage(cmd.CMD_generalControl.toUtf8());
-    myTcpClient.sendMessage(cmd.CMD_controlChannal.arg("10").toUtf8());
-    myTcpClient.sendMessage(cmd.CMD_controlSpeed.arg("10").toUtf8());
-    myTcpClient.sendMessage(cmd.CMD_targetChannal.arg("10").toUtf8());
-    myTcpClient.sendMessage(cmd.CMD_targetValue.arg("50").toUtf8());
+    myClient->sendMessage(cmd.CMD_generalControl.toUtf8());
+    myClient->sendMessage(cmd.CMD_controlChannal.arg("10").toUtf8());
+    myClient->sendMessage(cmd.CMD_controlSpeed.arg("10").toUtf8());
+    myClient->sendMessage(cmd.CMD_targetChannal.arg("10").toUtf8());
+    myClient->sendMessage(cmd.CMD_targetValue.arg("50").toUtf8());
 
-    myTcpClient.sendMessage(cmd.CMD_targetAction.arg("1").toUtf8());
-    myTcpClient.sendMessage(cmd.CMD_holdTime.arg("3").toUtf8());
+    myClient->sendMessage(cmd.CMD_targetAction.arg("1").toUtf8());
+    myClient->sendMessage(cmd.CMD_holdTime.arg("3").toUtf8());
 
 }

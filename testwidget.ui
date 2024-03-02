@@ -19,11 +19,40 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,8">
+   <item row="0" column="1">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>1157</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>347</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1" rowspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="8,0,2">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="8,0,2">
+      <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1,9">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="3">
          <item>
@@ -190,18 +219,25 @@ color: rgb(255, 0, 4);
         </layout>
        </item>
        <item>
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        <widget class="QChartView" name="graphicsView"/>
        </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,9">
        <item>
         <widget class="QPushButton" name="emergency">
          <property name="minimumSize">
@@ -218,16 +254,6 @@ background-color: rgb(255, 131, 131);</string>
           <string>急停</string>
          </property>
         </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="8,0,2">
-       <item>
-        <widget class="QGraphicsView" name="graphicsView"/>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_12"/>
        </item>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -317,18 +343,18 @@ background-color: rgb(255, 131, 131);</string>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <item>
-                 <widget class="QDoubleSpinBox" name="matulSpeed">
+                 <widget class="QSpinBox" name="matul">
                   <property name="minimumSize">
                    <size>
                     <width>100</width>
                     <height>40</height>
                    </size>
                   </property>
-                  <property name="minimum">
-                   <double>0.010000000000000</double>
-                  </property>
                   <property name="maximum">
-                   <double>9999.000000000000000</double>
+                   <number>100000</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>10</number>
                   </property>
                  </widget>
                 </item>
@@ -337,7 +363,7 @@ background-color: rgb(255, 131, 131);</string>
               <item>
                <widget class="QPushButton" name="up">
                 <property name="text">
-                 <string>↑</string>
+                 <string>上（压缩）</string>
                 </property>
                </widget>
               </item>
@@ -357,7 +383,7 @@ background-color: rgb(255, 131, 131);</string>
               <item>
                <widget class="QPushButton" name="stop">
                 <property name="text">
-                 <string>□</string>
+                 <string>停止</string>
                 </property>
                </widget>
               </item>
@@ -377,7 +403,7 @@ background-color: rgb(255, 131, 131);</string>
               <item>
                <widget class="QPushButton" name="down">
                 <property name="text">
-                 <string>↓</string>
+                 <string>下（拉伸）</string>
                 </property>
                </widget>
               </item>
@@ -410,33 +436,41 @@ background-color: rgb(255, 131, 131);</string>
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QRadioButton" name="blue">
-       <property name="text">
-        <string>blue</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="red">
-       <property name="text">
-        <string>red</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="black">
-       <property name="text">
-        <string>black</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="2" column="2">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>348</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="1">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>1157</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header>qchartview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

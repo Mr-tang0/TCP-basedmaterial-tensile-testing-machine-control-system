@@ -2,28 +2,47 @@
 #define INCLUDEHEADER_H
 
 
+#include "qtmaterialsnackbar.h"
+#include "qtmaterialflatbutton.h"
+
 #include <QDebug>
 #include <QTcpSocket>
 #include <QHostAddress>
 #include <QNetworkInterface>
-
+#include <QButtonGroup>
+#include <QRadioButton>
+#include <QAbstractButton>
 #include <QVBoxLayout>
 #include <QDataStream>
 #include <QTimer>
-
+#include <QTime>
+#include <QDateTime>
 #include <QtCore/QRandomGenerator>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QChart>
 #include <QtCharts/QChartView>
-#include<QThread>
+#include <QThread>
 #include <QEventLoop>
-
+#include <QFileDialog>
 #include <QtCore/qmath.h>
+#include <QMessageBox>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMainWindow>
+#include <QtCore/QtMath>
+#include <QtCore/QRandomGenerator>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+#include <QtCharts/QChart>
+#include <QtCharts/QChartView>
+//charts宏
+QT_CHARTS_USE_NAMESPACE
+
 
 struct tcpClient_details
 {
     QString netWorkIP;
+
     int portNumber;
 
     int sampleRate;
@@ -38,22 +57,34 @@ struct TCPFrame//218
     QByteArray tail;//4
 };
 
-struct motorDetails
+struct workerDetails
 {
-    int motorID;//地址
+    QString UseName = "admin";
+    QString Number = "000000";
+    QString testTime = "2099-01-01-00:00:00";
+    QString testType = "la";
+    QString filePath = "C:/";
 
-    double speed;//速度
-    double maxSpeed;//最大速度设置
-    double length;//运动距离
-    double maxLength;//最大运动距离
+    //拉伸或压缩
+    double speed = 1;//速度mm/s
+    double length = 1;//运动距离mm
+    double maxSpeed = 99;//最大速度设置
+    double maxLength = 99;//最大运动距离
+    double maxTime = 99;//最大运动时间
 
-    double cycle;//往返运动周期
+    //往返
+    int WaveTypeNumber = 1;//1 正弦波输出 2 三角波输出 3 方波输出 4 其他波形
+    double cycleSpeed = 1;//速度mm/s
+    double cycleLength = 1;//运动距离mm
+    double cycleTime = 1;//往返运动周期s
+    double cycleNumber = 100;
+    double cycleMaxTime;//最大运动时间
 
-    double pitch;//螺距
-    double currentAngle;//当前运动距离
-
-    double zero;//约定0点
-    double Backlash;//背隙补偿值
+    double lengthZero = 10;//约定距离0点
+    double forceZero = 10;//约定力0点
+    double Backlash = 0;//背隙补偿值
+    int stopAction = 0;//停止条件
+    double stopActionValue = 10;//停止条件值
 };
 
 struct waveformControlDetails
@@ -93,7 +124,7 @@ struct lengthControlDetails
 
     int finishAction = 1;//动作
 
-    float holdTime = 10;//持续时间
+    float holdTime = 0;//持续时间
 
     int closeCircleChannal = 3;//输出通道
 

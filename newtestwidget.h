@@ -16,12 +16,33 @@ class newTestWidget : public QWidget
 public:
     explicit newTestWidget(QWidget *parent = nullptr);
     ~newTestWidget();
+    void initThis();
 
 private slots:
     void on_cancel_clicked();
 
+    void on_Checked_clicked();
+
+    void on_chooseFilePath_pushButton_clicked();
+
 private:
     Ui::newTestWidget *ui;
+
+    QButtonGroup *myRadioGroup = new QButtonGroup(this);
+    void showEvent(QShowEvent*event)
+    {
+        emit thisShow();
+        QWidget::showEvent(event);
+    }
+    void hideEvent(QHideEvent*event)
+    {
+        emit thisHide();
+        QWidget::hideEvent(event);
+    }
+
+signals:
+    void thisShow();
+    void thisHide();
 };
 
 #endif // NEWTESTWIDGET_H

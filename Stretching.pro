@@ -23,7 +23,8 @@ SOURCES += \
     newtestwidget.cpp \
     systemsetwidget.cpp \
     tcpclient.cpp \
-    testwidget.cpp
+    testwidget.cpp \
+    worker.cpp
 
 HEADERS += \
     chart.h \
@@ -35,7 +36,8 @@ HEADERS += \
     newtestwidget.h \
     systemsetwidget.h \
     tcpclient.h \
-    testwidget.h
+    testwidget.h \
+    worker.h
 
 FORMS += \
     mainwindow.ui \
