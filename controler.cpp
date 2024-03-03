@@ -15,11 +15,11 @@ bool Controler::isConnected()
 }
 
 //连接控制器
-bool Controler::connectToControl()
+bool Controler::connectToControl(QString IP,int port,int samplerate)
 {
-    myClient->details.netWorkIP = "192.168.0.20";
-    myClient->details.portNumber = 6000;
-    myClient->details.sampleRate = 20;
+    myClient->details.netWorkIP = IP;
+    myClient->details.portNumber = port;
+    myClient->details.sampleRate = samplerate;
 
     myClient->tcpConnect();
 
@@ -27,10 +27,13 @@ bool Controler::connectToControl()
     {
         return false;
     }
+
     connect(myClient,&tcpClient::decodeDone,this,[=](QList<float> decodedData){
         emit decodeDone(decodedData);
     });
-    return myClient->sendMessage(cmd.CMD_connent.toUtf8());
+    bool flag = myClient->sendMessage(cmd.CMD_connent.toUtf8());
+
+    return flag;
 
 }
 

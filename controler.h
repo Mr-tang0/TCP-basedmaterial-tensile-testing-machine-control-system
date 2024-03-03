@@ -17,7 +17,7 @@ public:
 
     bool isConnected();
 
-    bool connectToControl();
+    bool connectToControl(QString IP,int port,int samplerate);
     bool disconnectToControl();
 
     void openCircleControl(int controlSpeed,int controlChannal);
@@ -44,7 +44,10 @@ public:
 private:
     controlCommand cmd;
     void delay(int delayTime);
+
 signals:
+    void connected();
+    void disconnected();
     void decodeDone(QList<float> decodedData);
 };
 

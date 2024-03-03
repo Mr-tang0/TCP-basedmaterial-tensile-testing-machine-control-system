@@ -17,6 +17,8 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+class QtMaterialDrawer;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -34,14 +36,16 @@ private slots:
 
     void on_actionNew_triggered();
 
+    void on_TCP_actionn_triggered();
 
 private:
     Ui::MainWindow *ui;
 
-
     testWidget *test = new testWidget;
     systemSetWidget *system = new systemSetWidget;
     newTestWidget *newTest = new newTestWidget;
-    // QtMaterialSnackbar  *const m_snackbar;
+
+    QtMaterialSnackbar  *const m_snackbar;
+    QtMaterialDrawer *const m_drawer;
 };
 #endif // MAINWINDOW_H

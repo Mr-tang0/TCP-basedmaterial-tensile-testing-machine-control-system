@@ -44,7 +44,7 @@ struct controlCommand
     QString CMD_initControlSpeed = "W026,%1;";//波形初始速率
 
 
-    QString CMD_outputPos = "W16,%1;";
+    QString CMD_outputPos = "W016,%1;";
 
     QString CMD_TimeClear = "W160,0;";
 

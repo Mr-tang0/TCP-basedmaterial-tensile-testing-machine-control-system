@@ -14,62 +14,43 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(247, 254, 255);</string>
+   <string notr="true">background-color: rgb(255, 255, 252);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="portButton">
-    <property name="geometry">
-     <rect>
-      <x>13</x>
-      <y>313</y>
-      <width>30</width>
-      <height>200</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>30</width>
-      <height>200</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>30</width>
-      <height>16777215</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>&gt;</string>
-    </property>
-   </widget>
-   <widget class="QStackedWidget" name="sonWidget">
-    <property name="geometry">
-     <rect>
-      <x>52</x>
-      <y>13</y>
-      <width>1327</width>
-      <height>801</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 249, 255);</string>
-    </property>
-    <widget class="QWidget" name="page"/>
-    <widget class="QWidget" name="page_2"/>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>600</y>
-      <width>31</width>
-      <height>191</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QWidget" name="maiWidget" native="true">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="portButton">
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>350</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>30</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="sonWidget" native="true"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -81,20 +62,20 @@
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu">
+    <property name="font">
+     <font>
+      <family>黑体</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="title">
-     <string>文件</string>
+     <string>项目</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
-    <addaction name="actionLatest"/>
     <addaction name="actionClear"/>
     <addaction name="actionSave"/>
     <addaction name="actionExit"/>
-   </widget>
-   <widget class="QMenu" name="menu_3">
-    <property name="title">
-     <string>视图</string>
-    </property>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
@@ -105,45 +86,47 @@
     <property name="title">
      <string>工具</string>
     </property>
+    <addaction name="actiona"/>
    </widget>
-   <widget class="QMenu" name="menu_6">
+   <widget class="QMenu" name="more_menu">
     <property name="title">
-     <string>帮助</string>
+     <string>更多</string>
     </property>
-   </widget>
-   <widget class="QMenu" name="menu_7">
-    <property name="title">
-     <string>关于</string>
-    </property>
+    <addaction name="action_help"/>
+    <addaction name="actionabout"/>
    </widget>
    <widget class="QMenu" name="menu_2">
-    <property name="title">
-     <string>编辑</string>
+    <property name="font">
+     <font>
+      <family>黑体</family>
+      <pointsize>10</pointsize>
+     </font>
     </property>
-    <addaction name="actionnihaop"/>
+    <property name="title">
+     <string>连接</string>
+    </property>
+    <addaction name="TCP_actionn"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="menu_2"/>
-   <addaction name="menu_3"/>
    <addaction name="menu_4"/>
    <addaction name="menu_5"/>
-   <addaction name="menu_6"/>
-   <addaction name="menu_7"/>
+   <addaction name="more_menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionnihaop">
+  <action name="TCP_actionn">
    <property name="text">
-    <string>nihaop</string>
+    <string>TCP</string>
    </property>
   </action>
   <action name="actionNew">
    <property name="text">
-    <string>New Project</string>
+    <string>新建项目</string>
    </property>
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open File</string>
+    <string>打开文件</string>
    </property>
   </action>
   <action name="actionLatest">
@@ -153,17 +136,32 @@
   </action>
   <action name="actionClear">
    <property name="text">
-    <string>Clear</string>
+    <string>清除</string>
    </property>
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>Save</string>
+    <string>保存</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="actiona">
+   <property name="text">
+    <string>计算器</string>
+   </property>
+  </action>
+  <action name="action_help">
+   <property name="text">
+    <string>帮助</string>
+   </property>
+  </action>
+  <action name="actionabout">
+   <property name="text">
+    <string>关于</string>
    </property>
   </action>
  </widget>

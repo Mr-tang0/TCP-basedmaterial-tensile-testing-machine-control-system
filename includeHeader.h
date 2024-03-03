@@ -1,7 +1,7 @@
 ﻿#ifndef INCLUDEHEADER_H
 #define INCLUDEHEADER_H
 
-
+#include <QWidget>
 #include "qtmaterialsnackbar.h"
 #include "qtmaterialflatbutton.h"
 
