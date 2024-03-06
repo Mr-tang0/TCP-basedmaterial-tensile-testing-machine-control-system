@@ -17,7 +17,7 @@ TcpConnectWidget::~TcpConnectWidget()
 
 void TcpConnectWidget::on_connect_Button_clicked()
 {
-    MainWindow::myControler->connectToControl(ui->TcpIP->text(),ui->Port->text().toInt(),20);
+    MainWindow::myControler->connectToControl(ui->TcpIP->text(),ui->Port->text().toInt(),1000);
 }
 
 

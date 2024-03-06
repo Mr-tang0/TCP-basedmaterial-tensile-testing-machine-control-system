@@ -241,6 +241,9 @@
                        <property name="text">
                         <string>拉伸</string>
                        </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
                       </widget>
                      </item>
                      <item>
@@ -511,13 +514,6 @@
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLabel" name="label_17">
-                           <property name="text">
-                            <string>行程周期（s）</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
                           <widget class="QLabel" name="label_18">
                            <property name="text">
                             <string>频率（Hz）</string>
@@ -559,9 +555,6 @@
                          </item>
                          <item>
                           <widget class="QDoubleSpinBox" name="cicleSpeed_doubleSpinBox_9"/>
-                         </item>
-                         <item>
-                          <widget class="QDoubleSpinBox" name="circleTime_doubleSpinBox_10"/>
                          </item>
                          <item>
                           <widget class="QDoubleSpinBox" name="circleFrequecy_doubleSpinBox_11"/>

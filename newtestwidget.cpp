@@ -57,14 +57,18 @@ void newTestWidget::on_Checked_clicked()
     MainWindow::myWorker->details.testType = myRadioGroup->checkedButton()->text();
     if(ui->filePath_lineEdit->text()!="")MainWindow::myWorker->details.filePath = ui->filePath_lineEdit->text();
 
+    qDebug()<<MainWindow::myWorker->details.filePath;
+
     //压缩拉伸
     MainWindow::myWorker->details.speed = ui->speed_doubleSpinBox_2->value();
     MainWindow::myWorker->details.length = ui->length_doubleSpinBox->value();
     //疲劳
     MainWindow::myWorker->details.WaveTypeNumber = ui->waveType_comboBox->currentIndex()+1;
+
     MainWindow::myWorker->details.cycleSpeed = ui->cicleSpeed_doubleSpinBox_9->value();
     MainWindow::myWorker->details.cycleLength = ui->cycleLength_doubleSpinBox_8->value();
-    MainWindow::myWorker->details.cycleTime = ui->circleTime_doubleSpinBox_10->value();
+    MainWindow::myWorker->details.frequency = ui->circleFrequecy_doubleSpinBox_11->value();
+
     MainWindow::myWorker->details.cycleNumber = ui->circleNumber_spinBox->value();
     MainWindow::myWorker->details.stopAction = ui->stopAction_comboBox->currentIndex();
     MainWindow::myWorker->details.stopActionValue = ui->stopActionValue_doubleSpinBox_12->value();

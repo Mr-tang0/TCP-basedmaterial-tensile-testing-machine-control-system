@@ -37,7 +37,7 @@
 #include <QtCharts/QChartView>
 //charts宏
 QT_CHARTS_USE_NAMESPACE
-
+#include<QRandomGenerator>
 
 struct tcpClient_details
 {
@@ -76,7 +76,7 @@ struct workerDetails
     int WaveTypeNumber = 1;//1 正弦波输出 2 三角波输出 3 方波输出 4 其他波形
     double cycleSpeed = 1;//速度mm/s
     double cycleLength = 1;//运动距离mm
-    double cycleTime = 1;//往返运动周期s
+    double frequency = 1;//往返运动周期s
     double cycleNumber = 100;
     double cycleMaxTime;//最大运动时间
 

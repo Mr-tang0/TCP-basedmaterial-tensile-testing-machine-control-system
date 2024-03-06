@@ -38,6 +38,8 @@ private slots:
 
     void on_TCP_actionn_triggered();
 
+    void on_actionOpen_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -47,5 +49,7 @@ private:
 
     QtMaterialSnackbar  *const m_snackbar;
     QtMaterialDrawer *const m_drawer;
+    void delay(int delayTime);
+    int temp_ = 0;
 };
 #endif // MAINWINDOW_H

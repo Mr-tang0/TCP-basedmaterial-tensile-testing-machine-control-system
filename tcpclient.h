@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "includeHeader.h"
-
+#include "decodethread.h"
 
 class tcpClient : public QObject
 {
@@ -26,11 +26,15 @@ public:
 
     tcpClient_details details;
 
+    static QByteArray readBuffer;
+    static QByteArray mutireadBuffer;
 private:
-    QByteArray readBuffer = "";
+
     TCPFrame frame;
     QTimer *timer = new QTimer;
     int kk;
+    QMap<QString,decodeThread*>myObj_decodeThread;
+    QMap<QString,QThread*>myObj_QThread;
 
 private slots:
     void MutiDecode();

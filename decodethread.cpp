@@ -20,7 +20,6 @@ void decodeThread::MutiThreaddecodeMessage(QByteArray message,QList<int> decodeD
             decodeData.append(decode);
         }
         emit decodeDone(decodeData);
-        // qDebug()<<decodeData;
     }
 
     emit finished();

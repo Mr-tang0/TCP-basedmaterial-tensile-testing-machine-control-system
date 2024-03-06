@@ -1,8 +1,9 @@
 ﻿#include "tcpclient.h"
-#include "decodethread.h"
+#include "testwidget.h"
 
 QTcpSocket *tcpClient::mySocket = new QTcpSocket;
-
+QByteArray tcpClient::readBuffer = "";
+QByteArray tcpClient::mutireadBuffer = "";
 
 tcpClient::tcpClient(QObject *parent)
     : QObject{parent}
@@ -22,54 +23,59 @@ tcpClient::tcpClient(QObject *parent)
     });
     connect(decode,&decodeThread::decodeDone,[=](QList<float> decodeData){
         emit decodeDone(decodeData);
+
     });
 
     // 多线程处理接收
-    // kk=0;
-    // connect(mySocket,&QTcpSocket::readyRead,this,[=](){
-    //     QByteArray message = mySocket->readAll();
-    //     readBuffer = readBuffer + message;
-    //     if(readBuffer.length()%218*10==0)
-    //     {
-    //         if(kk>1000)
-    //         {
-    //             // qDebug()<<kk;
-    //             return;
-    //         }
-    //         else {
-    //             kk++;
-    //             MutiDecode();
-    //         }
+    kk=0;
+    connect(mySocket,&QTcpSocket::readyRead,this,[=](){
+        if(testWidget::mutiSaveFlag)
+        {
+            timer->stop();
+            QByteArray message = mySocket->readAll();
+            mutireadBuffer = mutireadBuffer + message;
+            qDebug()<<mutireadBuffer.length()/218;
+        }
+        else
+        {
+            timer->start(1000/details.sampleRate);//这个是开启接受计时器，由于传感器发送数据过快，为避免拥堵，按照设置采样率去接受处理
+        }
+    });
 
-
-    //     }
-    // });
 
 }
 void tcpClient::MutiDecode()
 {
-    // qDebug()<<kk;
-    // decodeThread *decode = new decodeThread;
-    // QThread *tempthread = new QThread;
 
-    // decode->moveToThread(tempthread);
-    // decode->MutiThreaddecodeMessage(readBuffer,{1,23});
 
-    // tempthread->start();
+    QString randomDecodeName = "decode"+QString::number(QRandomGenerator::global()->generate());
+    QString randomthreadName = "thread"+QString::number(QRandomGenerator::global()->generate());
 
-    // connect(decode,&decodeThread::finished,[=](){
-    //     // tempthread->deleteLater();
-    //     // decode->deleteLater();
-    //     kk = kk-1;
-    //     qDebug()<<"delete";
-    // });
-    // connect(tempthread,&QThread::destroyed,tempthread,&QThread::quit);
+    qDebug()<<kk<<randomDecodeName<<randomthreadName;
 
-    // connect(decode,&decodeThread::decodeDone,[=](QList<float> temp){
-    //     qDebug()<<temp;//此为处理回的数据
-    // });
+    decodeThread *decode = new decodeThread();
+    myObj_decodeThread.insert(randomDecodeName,decode);
+    QThread *tempthread = new QThread;
+    myObj_QThread.insert(randomthreadName,tempthread);
 
-    // readBuffer.clear();
+    myObj_decodeThread[randomDecodeName]->moveToThread(myObj_QThread[randomthreadName]);
+    myObj_decodeThread[randomDecodeName]->MutiThreaddecodeMessage(readBuffer,{1,23});
+
+    myObj_QThread[randomthreadName]->start();
+
+    connect(myObj_decodeThread[randomDecodeName],&decodeThread::finished,[=](){
+        myObj_QThread[randomthreadName]->deleteLater();
+        myObj_decodeThread[randomDecodeName]->deleteLater();
+        kk = kk-1;
+        qDebug()<<"delete";
+    });
+    connect(myObj_QThread[randomthreadName],&QThread::destroyed,myObj_QThread[randomthreadName],&QThread::quit);
+
+    connect(myObj_decodeThread[randomDecodeName],&decodeThread::decodeDone,[=](QList<float> temp){
+        qDebug()<<temp;//此为处理回的数据
+    });
+
+    readBuffer.clear();
 }
 
 bool tcpClient::isopen()

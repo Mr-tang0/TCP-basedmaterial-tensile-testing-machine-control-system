@@ -361,7 +361,7 @@ background-color: rgb(255, 131, 131);</string>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QPushButton" name="setWeighZero">
+            <widget class="QPushButton" name="mutiSave">
              <property name="minimumSize">
               <size>
                <width>100</width>
@@ -372,7 +372,7 @@ background-color: rgb(255, 131, 131);</string>
               <string notr="true">font: 10pt &quot;黑体&quot;;</string>
              </property>
              <property name="text">
-              <string>去皮</string>
+              <string>强保存</string>
              </property>
             </widget>
            </item>
@@ -384,6 +384,13 @@ background-color: rgb(255, 131, 131);</string>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QCheckBox" name="mutiSaveOpen">
+             <property name="text">
+              <string>强保存开关</string>
+             </property>
+            </widget>
+           </item>
            <item>
             <spacer name="verticalSpacer_3">
              <property name="orientation">
@@ -400,7 +407,29 @@ background-color: rgb(255, 131, 131);</string>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_2">
              <item>
-              <widget class="QRadioButton" name="radioButton">
+              <widget class="QRadioButton" name="radioButton_forceToTime">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="tabletTracking">
+                <bool>false</bool>
+               </property>
+               <property name="acceptDrops">
+                <bool>false</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+               </property>
+               <property name="text">
+                <string>力-时间</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_lengthToTime">
                <property name="styleSheet">
                 <string notr="true">font: 10pt &quot;黑体&quot;;</string>
                </property>
@@ -410,17 +439,7 @@ background-color: rgb(255, 131, 131);</string>
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_2">
-               <property name="styleSheet">
-                <string notr="true">font: 10pt &quot;黑体&quot;;</string>
-               </property>
-               <property name="text">
-                <string>力-时间</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="radioButton_3">
+              <widget class="QRadioButton" name="radioButton_forceToLength">
                <property name="styleSheet">
                 <string notr="true">font: 10pt &quot;黑体&quot;;</string>
                </property>
