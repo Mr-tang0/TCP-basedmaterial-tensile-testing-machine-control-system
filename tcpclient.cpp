@@ -17,7 +17,7 @@ tcpClient::tcpClient(QObject *parent)
         readBuffer = readBuffer + message;
         if(readBuffer.length()>=218)
         {
-            decode->MutiThreaddecodeMessage(readBuffer.mid(0,218),{0,10,29});
+            decode->MutiThreaddecodeMessage(readBuffer.mid(0,218),{0,10,13,29});
             readBuffer.clear();
         }
     });
@@ -59,7 +59,7 @@ void tcpClient::MutiDecode()
     myObj_QThread.insert(randomthreadName,tempthread);
 
     myObj_decodeThread[randomDecodeName]->moveToThread(myObj_QThread[randomthreadName]);
-    myObj_decodeThread[randomDecodeName]->MutiThreaddecodeMessage(readBuffer,{1,23});
+    myObj_decodeThread[randomDecodeName]->MutiThreaddecodeMessage(readBuffer,{0,10,13,29});
 
     myObj_QThread[randomthreadName]->start();
 
@@ -111,16 +111,15 @@ bool tcpClient::tcpConnect()
         emit disconnected();
     });
 
-
     return mySocket->isOpen();
 }
 
 bool tcpClient::sendMessage(QByteArray message)
 {
+    qDebug()<<"message"<<message;
     if(mySocket->isOpen())
     {
         bool flag  = mySocket->write(message);
-        qDebug()<<message;
         return flag;
     }
     else {

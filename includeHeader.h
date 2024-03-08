@@ -64,6 +64,9 @@ struct workerDetails
     QString testTime = "2099-01-01-00:00:00";
     QString testType = "la";
     QString filePath = "C:/";
+    QString fileName = "userData%1.csv";
+
+    float targetSize = 1;//标距段尺寸mm
 
     //拉伸或压缩
     double speed = 1;//速度mm/s
@@ -80,8 +83,9 @@ struct workerDetails
     double cycleNumber = 100;
     double cycleMaxTime;//最大运动时间
 
-    double lengthZero = 10;//约定距离0点
-    double forceZero = 10;//约定力0点
+    double lengthZero = 0;//约定距离0点
+    double factLengthZero = 0;//约定位移传感器0点
+    double forceZero = 0;//约定力0点
     double Backlash = 0;//背隙补偿值
     int stopAction = 0;//停止条件
     double stopActionValue = 10;//停止条件值
@@ -89,7 +93,7 @@ struct workerDetails
 
 struct waveformControlDetails
 {
-    int amplitudeMaintain = 0;//幅度保持
+    int amplitudeMaintain = 1;//幅度保持
 
     int waveType = 1;//波形
 

@@ -47,26 +47,37 @@ private slots:
 
     void on_mutiSaveOpen_toggled(bool checked);
 
+    void on_autoMove_toggled(bool checked);
+
 private:
     Ui::testWidget *ui;
     QList<QList<float>> factData;
+    bool autoFlag = false;
+    void autoToZreoForce(int targetForce);
+    QTimer *autoTimer = new QTimer;
 
     QLineSeries *factSeries = new QLineSeries();
     QLineSeries *force_time_Series = new QLineSeries();
     QLineSeries *length_time_Series = new QLineSeries();
     QLineSeries *force_length_Series = new QLineSeries();
+    QLineSeries *stress_strain_Series = new QLineSeries();
     QChart *chart = new QChart();
     void drawer();
 
-    float currentForce = 0;
-    float currentLength = 0;
-    float currentTime = 0;
+    float currentForce = 0;//载荷
+    float currentStress= 0;//应力
+    float targetLength = 0;//计算位移
+    float currentLength = 0;//位移传感器
+    float currentStrain = 0;//应变
+    float currentTime = 0;//时间
     float startTime = 0;
 
     int test = 0;
     QTimer *mutiSaveTimer = new QTimer;
     bool tempflag = false;
     int checkWaveId = 1;
+signals:
+    void saved();
 };
 
 #endif // TESTWIDGET_H

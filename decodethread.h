@@ -15,6 +15,7 @@ public:
 
     TCPFrame messageToTrame(QByteArray message);
     float dataToFloat(QByteArray data);
+    void readFile(QString data);
 
 
 signals:

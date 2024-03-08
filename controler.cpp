@@ -107,10 +107,11 @@ void Controler::closeCircleControl_Wave(waveformControlDetails detail)
         return;
     }
 
+    myClient->sendMessage("W169,0;");
     //幅度保持开关
     myClient->sendMessage(cmd.CMD_amplitudeMaintain.arg(484+detail.closeCircleChannal).arg(detail.amplitudeMaintain).toUtf8());
 
-    //波形0
+    //波形1
     myClient->sendMessage(cmd.CMD_generalControl.arg(detail.waveType).toUtf8());
 
     //波形初始角度
@@ -181,4 +182,13 @@ void Controler::mode_Reciprocate()
     myClient->sendMessage(cmd.CMD_targetAction.arg("1").toUtf8());
     myClient->sendMessage(cmd.CMD_holdTime.arg("3").toUtf8());
 
+}
+
+void Controler::channalClear(int channalNumber)
+{
+    if(!myClient->isopen())
+    {
+        return;
+    }
+    myClient->sendMessage(cmd.CMD_ChannalClear.arg(140+channalNumber).toUtf8());
 }

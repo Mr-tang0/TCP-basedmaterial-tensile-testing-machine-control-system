@@ -56,12 +56,16 @@ void MainWindow::initThis()
 
 
     connect(Controler::myClient,&tcpClient::connected,this,[=](){
-        m_snackbar->addMessage("connected!");
+        m_snackbar->addMessage("连接成功!");
     });
     connect(Controler::myClient,&tcpClient::disconnected,this,[=](){
-        m_snackbar->addMessage("disconnected!");
+        m_snackbar->addMessage("异常断开!");
     });
     connect(myControler,&Controler::decodeDone,test,&testWidget::fresh);//连接解码和界面
+
+    connect(test,&testWidget::saved,[=](){
+        m_snackbar->addMessage("保存成功!");
+    });
 
 }
 
@@ -99,84 +103,75 @@ void MainWindow::on_actionOpen_triggered()
     }
     else {
         m_snackbar->addMessage("正在解码!");
-        delay(2000);
-        decodeThread *decode = new decodeThread;
-        QThread *thread = new QThread;
-        decode->moveToThread(thread);
-
-
-        connect(decode,&decodeThread::decodeDone,test,&testWidget::fresh);//连接解码和界面
-
-        thread->start();
 
         QByteArray fileData = labelFile.readAll();
         labelFile.close();
 
-        QString temp_f,temp;
-        QByteArray builtData;
-        uchar byteValue ;
-
-        for (int i = 0; i < fileData.length()/2; i++) {
-            temp = temp+" "+fileData.mid(i*2,2);
-            qDebug()<<i<<fileData.length()/2;
-        }
-        temp.remove(0,1);
-
-        bool ok;
-        for (const auto &chunk : temp.split(" "))
+        decodeThread *decode = new decodeThread;
+        connect(decode,&decodeThread::decodeDone,test,&testWidget::fresh);//连接解码和界面
+        if(fileData.mid(0,3)=="TEP")
         {
-            byteValue = uchar(chunk.toUShort(&ok, 16));
-            if (!ok)
-            {
-                // 转换失败后的操作，待定
-                qDebug() << "数据存在错误" ;
-            }
-            else
-            {
-                builtData.append(char(byteValue));
-            }
-            temp_++;
-            qDebug()<<temp_;
+            fileData.remove(0,3);
 
+            QString temp;
+            QByteArray builtData;
+            uchar byteValue ;
+
+
+
+            QThread *thread = new QThread;
+            decode->moveToThread(thread);
+
+            int needDecodeLength = fileData.length()/436;
+
+            QStringList dataFrame;
+            for (int i = 0; i < int(needDecodeLength/100); ++i) {
+                dataFrame.append(fileData.mid(i*100*436,100*436));
+            }
+            dataFrame.append(fileData.right(fileData.length()-int(needDecodeLength/100)*100*436));
+
+
+
+            foreach (QString item, dataFrame) {
+                for (int i = 0; i < 100*436; ++i) {
+                    temp = temp + " "+ item.mid(i*2,2);
+                }
+                temp.remove(0,1);
+
+
+                bool ok;
+                for (const auto &chunk : temp.split(" "))
+                {
+                    if(chunk!="")
+                    {
+                        byteValue = uchar(chunk.toUShort(&ok, 16));
+                        if (!ok)
+                        {
+                            qDebug() << "数据存在错误" ;
+                        }
+                        else
+                        {
+                            builtData.append(char(byteValue));
+                        }
+                    }
+                    temp_++;
+                }
+                temp.clear();
+                delay(0);
+            }
+            decode->MutiThreaddecodeMessage(builtData,{0,10,13,29});
+
+            thread->start();
         }
-        temp.clear();
-        decode->MutiThreaddecodeMessage(builtData,{0,10,29});
-
-        // int length  = fileData.length()/436;
-        // for (int j = 0; j < length; j++)
-        // {
-        //     temp_++;
-        //     qDebug()<<fileData.length()/436;
-
-        //     temp_f = fileData.left(436);
-        //     fileData.remove(0,436);
+        else
+        {
+            QString tempfile = fileData;
+            tempfile.remove(tempfile.length()-1,1);
+            decode->readFile(tempfile);
+        }
 
 
-        //     for (int i = 0; i < 218; i++) {
-        //         temp = temp+" "+temp_f.mid(i*2,2);
-        //     }
 
-        //     temp.remove(0,1);
-
-
-        //     bool ok;
-        //     for (const auto &chunk : temp.split(" "))
-        //     {
-        //         byteValue = uchar(chunk.toUShort(&ok, 16));
-        //         if (!ok)
-        //         {
-        //             // 转换失败后的操作，待定
-        //             qDebug() << "数据存在错误" ;
-        //         }
-        //         else
-        //         {
-        //             builtData.append(char(byteValue));
-        //         }
-
-        //     }
-        //     temp.clear();
-        //     decode->MutiThreaddecodeMessage(builtData,{0,10,29});
-        // }
         delay(1000);
         m_snackbar->addMessage("解码完成!");
 

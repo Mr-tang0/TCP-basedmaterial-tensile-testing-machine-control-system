@@ -30,7 +30,7 @@ public:
     void closeCircleControl_STOP(int channal);
 
 
-
+    void channalClear(int channalNumber);
 
 
     void mode_Stretch();//拉伸运动

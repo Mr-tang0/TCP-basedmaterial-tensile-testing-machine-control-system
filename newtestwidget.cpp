@@ -56,6 +56,10 @@ void newTestWidget::on_Checked_clicked()
     MainWindow::myWorker->details.testTime = ui->time_lineEidt->text();
     MainWindow::myWorker->details.testType = myRadioGroup->checkedButton()->text();
     if(ui->filePath_lineEdit->text()!="")MainWindow::myWorker->details.filePath = ui->filePath_lineEdit->text();
+    if(ui->filePath_lineEdit_2->text()!="")
+        MainWindow::myWorker->details.fileName = ui->filePath_lineEdit_2->text();
+    else
+        MainWindow::myWorker->details.fileName = MainWindow::myWorker->details.UseName+MainWindow::myWorker->details.testTime;
 
     qDebug()<<MainWindow::myWorker->details.filePath;
 

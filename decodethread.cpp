@@ -8,6 +8,7 @@ decodeThread::decodeThread(QObject *parent)
 
 void decodeThread::MutiThreaddecodeMessage(QByteArray message,QList<int> decodeDataNumber)
 {
+    //0:S0力，10：S10计算位移,13：S13位移传感,29：时间
 
     for (int i = 0; i < message.length()/218; i++)
     {
@@ -58,6 +59,29 @@ float decodeThread::dataToFloat(QByteArray data)//小端数据
     }
 
     return result;
+
+}
+void decodeThread::readFile(QString data)
+{
+    int i = 0;
+
+    bool ok;
+
+    for (const QString &chunk : data.split("\n"))
+    {
+        if(i!=0)//去表头
+        {
+            QList<float> tempDecodeData;
+
+            for (const QString &temp : chunk.split(","))
+            {
+                float value= temp.toFloat(&ok);
+                if(ok)tempDecodeData.append(value);
+            }
+            emit decodeDone(tempDecodeData);
+        }
+        i++;
+    }
 
 }
 

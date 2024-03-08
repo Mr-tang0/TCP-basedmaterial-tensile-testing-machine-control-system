@@ -19,6 +19,7 @@ SOURCES += \
     decodethread.cpp \
     main.cpp \
     mainwindow.cpp \
+    mylcdnumber.cpp \
     newtestwidget.cpp \
     systemsetwidget.cpp \
     tcpclient.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     decodethread.h \
     includeHeader.h \
     mainwindow.h \
+    mylcdnumber.h \
     newtestwidget.h \
     systemsetwidget.h \
     tcpclient.h \

@@ -29,7 +29,7 @@ struct controlCommand
     QString CMD_outputChannal = "W004,%1;";//输出通道
 
 
-    QString CMD_amplitudeMaintain = "W%1,%2";//幅度保持开关
+    QString CMD_amplitudeMaintain = "W%1,%2;";//幅度保持开关
 
     QString CMD_initAngle = "W024,%1;";//初始角度
 
@@ -47,6 +47,9 @@ struct controlCommand
     QString CMD_outputPos = "W016,%1;";
 
     QString CMD_TimeClear = "W160,0;";
+
+    QString CMD_ChannalClear = "W%1,0;";//通道清零
+
 
 };
 
