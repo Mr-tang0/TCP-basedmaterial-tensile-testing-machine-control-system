@@ -19,6 +19,9 @@ public:
     void saveTest(QString filePath);
     void StrongSaveTest(QString filePath);
 
+    static bool freshUiFlag;
+    void freshUi();
+
     static bool mutiSaveFlag;
 
 public slots:
@@ -72,6 +75,8 @@ private:
     float currentTime = 0;//时间
     float startTime = 0;
 
+    QTimer *autoStopTimer = new QTimer;
+    QTimer *uiFreshTimer = new QTimer;
     QTimer *mutiSaveTimer = new QTimer;
     int mutiSaveTime = 500;//强保存时间
     bool tempflag = false;
@@ -81,6 +86,16 @@ signals:
     void saved();
     void failed();
     void clear();
+    void thisShow();
+protected:
+    void resizeEvent(QResizeEvent *event) override {
+
+        QWidget::resizeEvent(event);
+
+        resize();
+        // 在这里执行你自己的处理逻辑
+    }
+    void resize();
 };
 
 #endif // TESTWIDGET_H

@@ -4,10 +4,15 @@
 loginWidget::loginWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::loginWidget),
-    m_snackbar(new QtMaterialSnackbar)
+    m_snackbar(new QtMaterialSnackbar),
+    m_textField(new QtMaterialTextField)
 {
     ui->setupUi(this);
     m_snackbar->setParent(this);
+    this->setWindowTitle("登录与注册");
+    this->setWindowIcon(QIcon(":/new/prefix1/icon.png"));
+    ui->userName->setLabel("userName");
+    ui->passWord->setLabel("passWord");
 
     QString rootPath  = QCoreApplication::applicationDirPath();
     QFile file(rootPath+"/users.users");

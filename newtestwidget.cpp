@@ -23,7 +23,7 @@ newTestWidget::newTestWidget(QWidget *parent)
     connect(ui->stopAction_comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),this,[=](int index){
         QStringList temp = {"s","N","mm",""};
         ui->unit_label->setText(temp[index]);
-        ui->stopActionValue_doubleSpinBox_12->setEnabled(true);
+        ui->stopActionValue_doubleSpinBox->setEnabled(true);
     });
 
 }
@@ -86,8 +86,10 @@ void newTestWidget::on_Checked_clicked()
     MainWindow::myWorker->details.frequency = ui->circleFrequecy_doubleSpinBox_11->value();
 
     MainWindow::myWorker->details.cycleNumber = ui->circleNumber_spinBox->value();
+
+    //停止条件
     MainWindow::myWorker->details.stopAction = ui->stopAction_comboBox->currentIndex();
-    MainWindow::myWorker->details.stopActionValue = ui->stopActionValue_doubleSpinBox_12->value();
+    MainWindow::myWorker->details.stopActionValue = ui->stopActionValue_doubleSpinBox->value();
 
     this->hide();
 }

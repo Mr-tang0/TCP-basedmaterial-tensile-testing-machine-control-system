@@ -11,19 +11,24 @@ tcpClient::tcpClient(QObject *parent)
 
     //计时器处理接收
     decodeThread *decode = new decodeThread;
+    QThread *myThread = new QThread;
+    decode->moveToThread(myThread);
+    myThread->start();
+
     connect(timer,&QTimer::timeout,this,[=](){
         QByteArray message = mySocket->readAll();
 
         readBuffer = readBuffer + message;
+
         if(readBuffer.length()>=218)
         {
             decode->MutiThreaddecodeMessage(readBuffer.mid(0,218),{0,10,13,29});
             readBuffer.clear();
         }
     });
+
     connect(decode,&decodeThread::decodeDone,[=](QList<float> decodeData){
         emit decodeDone(decodeData);
-
     });
 
     // 多线程处理接收

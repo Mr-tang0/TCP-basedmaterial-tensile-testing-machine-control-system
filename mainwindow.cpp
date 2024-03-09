@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 #include <QColorDialog>
 #include <qtmaterialdrawer.h>
-#include "tcpconnectwidget.h"
+
 
 Controler *MainWindow::myControler = new Controler;
 worker *MainWindow::myWorker = new worker;
@@ -23,10 +23,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     QVBoxLayout *drawerLayout = new QVBoxLayout;
     m_drawer->setDrawerLayout(drawerLayout);
-    drawerLayout->addWidget(new TcpConnectWidget);
+    drawerLayout->addWidget(mytcp);
 
 
     initThis();
+    this->setWindowTitle("材料试验机");
+    this->setWindowIcon(QIcon(":/new/prefix1/icon.png"));
 }
 
 MainWindow::~MainWindow()
@@ -107,8 +109,10 @@ void MainWindow::on_actionOpen_triggered()
         QByteArray fileData = labelFile.readAll();
         labelFile.close();
 
-        decodeThread *decode = new decodeThread;
-        connect(decode,&decodeThread::decodeDone,test,&testWidget::fresh);//连接解码和界面
+        decodeThread *readFileDecode = new decodeThread;
+
+        connect(readFileDecode,&decodeThread::decodeDone,test,&testWidget::fresh);//连接解码和界面
+
         if(fileData.mid(0,3)=="TEP")
         {
             QFileInfo fileinfo(filePath);
@@ -124,8 +128,8 @@ void MainWindow::on_actionOpen_triggered()
 
 
 
-            QThread *thread = new QThread;
-            decode->moveToThread(thread);
+            QThread *readFilethread = new QThread;
+            readFileDecode->moveToThread(readFilethread);
 
             int needDecodeLength = fileData.length()/436;
 
@@ -164,15 +168,15 @@ void MainWindow::on_actionOpen_triggered()
                 temp.clear();
                 delay(0);
             }
-            decode->MutiThreaddecodeMessage(builtData,{0,10,13,29});
+            readFileDecode->MutiThreaddecodeMessage(builtData,{0,10,13,29});
 
-            thread->start();
+            readFilethread->start();
         }
         else
         {
             QString tempfile = fileData;
             tempfile.remove(tempfile.length()-1,1);
-            decode->readFile(tempfile);
+            readFileDecode->readFile(tempfile);
         }
 
 
@@ -198,5 +202,12 @@ void MainWindow::on_actionSave_triggered()
     QString filePath  = myWorker->details.filePath+"/"+myWorker->details.fileName+".csv";
     qDebug()<<filePath;
     test->saveTest(filePath);
+}
+
+
+void MainWindow::on_action_login_triggered()
+{
+    m_drawer->openDrawer();
+    mytcp->commandLinkButton_clicked();
 }
 

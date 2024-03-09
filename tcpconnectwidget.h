@@ -15,6 +15,8 @@ class TcpConnectWidget : public QWidget
 public:
     explicit TcpConnectWidget(QWidget *parent = nullptr);
     ~TcpConnectWidget();
+    void commandLinkButton_clicked();
+
 
 private slots:
     void on_connect_Button_clicked();
@@ -22,6 +24,7 @@ private slots:
     void on_disconnect_Button_clicked();
 
     void on_commandLinkButton_clicked();
+
 
 private:
     Ui::TcpConnectWidget *ui;

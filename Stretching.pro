@@ -16,6 +16,7 @@ INCLUDEPATH+=$$PWD/libs/Include
 SOURCES += \
     chart.cpp \
     controler.cpp \
+    decoderunworker.cpp \
     decodethread.cpp \
     loginwidget.cpp \
     main.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     chart.h \
     commandList.h \
     controler.h \
+    decoderunworker.h \
     decodethread.h \
     includeHeader.h \
     loginwidget.h \
@@ -56,3 +58,8 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res/res.qrc
+
+RC_ICONS = res\icon.ico

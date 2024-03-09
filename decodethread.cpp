@@ -4,11 +4,63 @@ decodeThread::decodeThread(QObject *parent)
     : QObject{parent}
 {
 
+    for (int i = 0; i < 7; ++i) {
+        runWorker.append(new decodeRunWorker);
+        runThread.append(new QThread);
+        runWorker[i]->moveToThread(runThread[i]);
+        runThread[i]->start();
+    }
+
+    connect(this,&decodeThread::getMessage1,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+        runWorker[0]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    });
+    connect(this,&decodeThread::getMessage2,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+        runWorker[1]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    });
+    connect(this,&decodeThread::getMessage3,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+        runWorker[2]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    });
+    connect(this,&decodeThread::getMessage4,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+        runWorker[3]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    });
+    connect(this,&decodeThread::getMessage5,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+        runWorker[4]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    });
+    connect(this,&decodeThread::getMessage6,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+        runWorker[6]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    });
+
+
 }
 
 void decodeThread::MutiThreaddecodeMessage(QByteArray message,QList<int> decodeDataNumber)
 {
-    //0:S0力，10：S10计算位移,13：S13位移传感,29：时间
+    // switch (threadId) {
+    // case 0:
+    //     emit getMessage1(message,decodeDataNumber,threadId);
+    //     break;
+    // case 1:
+    //     emit getMessage2(message,decodeDataNumber,threadId);
+    //     break;
+    // case 2:
+    //     emit getMessage3(message,decodeDataNumber,threadId);
+    //     break;
+    // case 3:
+    //     emit getMessage4(message,decodeDataNumber,threadId);
+    //     break;
+    // case 4:
+    //     emit getMessage5(message,decodeDataNumber,threadId);
+    //     break;
+    // case 5:
+    //     emit getMessage6(message,decodeDataNumber,threadId);
+    //     break;
+    // default:
+    //     break;
+    // }
+
+    // threadId++;
+    // if(threadId>6)threadId=0;
+    // 0:S0力，10：S10计算位移,13：S13位移传感,29：时间
 
     for (int i = 0; i < message.length()/218; i++)
     {
@@ -79,9 +131,14 @@ void decodeThread::readFile(QString data)
                 if(ok)tempDecodeData.append(value);
             }
             emit decodeDone(tempDecodeData);
+
+            QEventLoop loop;
+            QTimer::singleShot(1,&loop,SLOT(quit()));
+            loop.exec();
         }
         i++;
     }
+
 
 }
 

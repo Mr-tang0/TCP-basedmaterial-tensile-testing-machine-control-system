@@ -10,7 +10,7 @@ TcpConnectWidget::TcpConnectWidget(QWidget *parent)
     ui->setupUi(this);
     ui->UserName->setText(MainWindow::myWorker->details.UseName);
 
-    ui->connect_Button->setEnabled(false);
+    // ui->connect_Button->setEnabled(false);
     connect(login,&loginWidget::login,this,[=](QString userName){
         MainWindow::myWorker->details.UseName = userName;
         ui->UserName->setText(MainWindow::myWorker->details.UseName);
@@ -35,10 +35,14 @@ void TcpConnectWidget::on_disconnect_Button_clicked()
     MainWindow::myControler->disconnectToControl();
 }
 
-
+void TcpConnectWidget::commandLinkButton_clicked()
+{
+    on_commandLinkButton_clicked();
+}
 void TcpConnectWidget::on_commandLinkButton_clicked()
 {
     //登录注册
+    qDebug()<<"click";
     login->show();
 }
 

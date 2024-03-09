@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include "includeHeader.h"
+#include <QColorDialog>
+#include <qtmaterialtextfield.h>
 
 namespace Ui {
 class loginWidget;
@@ -24,11 +26,14 @@ private slots:
 private:
     Ui::loginWidget *ui;
     QtMaterialSnackbar  *const m_snackbar;
+    QtMaterialTextField  *const m_textField;
+
     bool logined(QString userName,QString password);
     bool signup(QString userName,QString password);
     void delay(int delayTime);
     QJsonObject loginObject;
     QByteArray hashEncode(QString data);
+
 
 signals:
     void shortPassword();

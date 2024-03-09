@@ -10,7 +10,7 @@
 #include "systemsetwidget.h"
 #include "worker.h"
 #include"decodethread.h"
-
+#include "tcpconnectwidget.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -42,8 +42,11 @@ private slots:
 
     void on_actionSave_triggered();
 
+    void on_action_login_triggered();
+
 private:
     Ui::MainWindow *ui;
+    TcpConnectWidget *mytcp =new TcpConnectWidget;
 
     testWidget *test = new testWidget;
     systemSetWidget *system = new systemSetWidget;

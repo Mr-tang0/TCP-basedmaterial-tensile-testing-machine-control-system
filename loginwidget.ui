@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>509</width>
-    <height>832</height>
+    <width>412</width>
+    <height>702</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(244, 247, 255);</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -106,7 +109,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLineEdit" name="userName">
+              <widget class="QtMaterialTextField" name="userName">
                <property name="minimumSize">
                 <size>
                  <width>300</width>
@@ -129,7 +132,7 @@ background-color: rgb(230, 230, 230);</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="passWord">
+              <widget class="QtMaterialTextField" name="passWord">
                <property name="minimumSize">
                 <size>
                  <width>300</width>
@@ -182,13 +185,13 @@ background-color: rgb(230, 230, 230);</string>
           </spacer>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
+          <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,1">
            <item>
             <widget class="QPushButton" name="loginBtn">
              <property name="minimumSize">
               <size>
-               <width>150</width>
-               <height>80</height>
+               <width>75</width>
+               <height>40</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -218,8 +221,8 @@ background-color: rgb(188, 240, 255);
             <widget class="QPushButton" name="signUpBtn">
              <property name="minimumSize">
               <size>
-               <width>150</width>
-               <height>80</height>
+               <width>75</width>
+               <height>40</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -268,6 +271,13 @@ border-radius: 5px;</string>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QtMaterialTextField</class>
+   <extends>QLineEdit</extends>
+   <header>qtmaterialtextfield.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

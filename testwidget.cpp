@@ -4,6 +4,7 @@
 
 
 bool testWidget::mutiSaveFlag = false;
+bool testWidget::freshUiFlag = false;
 
 testWidget::testWidget(QWidget *parent)
     : QWidget(parent)
@@ -36,10 +37,12 @@ testWidget::testWidget(QWidget *parent)
         MainWindow::myControler->channalClear(0);
     });
     connect(ui->displacement,&myLcdNumber::doubleClicked,this,[=](){
-        MainWindow::myControler->channalClear(10);
+        // MainWindow::myControler->channalClear(10);
+        on_setLengthZero_clicked();
     });
     connect(ui->displacement_sensors,&myLcdNumber::doubleClicked,this,[=](){
-        MainWindow::myControler->channalClear(13);
+        // MainWindow::myControler->channalClear(13);
+        on_setLengthZero_clicked();
     });
     connect(ui->Duration,&myLcdNumber::doubleClicked,this,[=](){
         MainWindow::myControler->channalClear(20);
@@ -58,59 +61,76 @@ testWidget::testWidget(QWidget *parent)
     connect(autoTimer,&QTimer::timeout,this,[=](){
         if(autoFlag) autoToZreoForce(5);
     });
+    connect(uiFreshTimer,&QTimer::timeout,this,[=](){
+        if(freshUiFlag) freshUi();
+    });
+    connect(autoStopTimer,&QTimer::timeout,this,[=](){
+        switch (MainWindow::myWorker->details.stopAction) {
+        case 0:
+            if(currentTime-startTime>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
+            break;
+        case 1:
+            if(currentForce>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
+            break;
+        case 2:
+            if(currentForce>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
+            break;
+        case 3:
+            if(targetLength-MainWindow::myWorker->details.lengthZero>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
+            break;
+        default:
+            autoStopTimer->stop();
+            break;
+        }
+        ;
+    });
 
+    uiFreshTimer->start(100);
+    freshUiFlag = true;
 }
 
 testWidget::~testWidget()
 {
     delete ui;
 }
-void testWidget::fresh(QList<float> decodeData)
-{
-    //0:S0力，10：S10计算位移,13：S13位移传感,29：时间
 
-    currentForce = decodeData[0];
+void testWidget::resize()
+{
+
+    int newFontSize = std::min(this->size().width(), this->size().height()); // 这里假设窗口每宽高100像素增大1个字体大小单位
+    qDebug()<<newFontSize;
+
+    ui->label_load->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
+    ui->label_stress->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
+    ui->label_targetlength->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
+    ui->label_factlength->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
+    ui->label_stain->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
+    ui->label_time->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
+
+}
+void testWidget::freshUi()
+{
+
     ui->load->display(QString::number(currentForce,'f',2));
 
     currentStress = currentForce/MainWindow::myWorker->details.targetSize;
     ui->stress->display(QString::number(currentStress,'f',2));
 
-    targetLength = decodeData[1];
+
     ui->displacement->display(QString::number(targetLength-MainWindow::myWorker->details.lengthZero,'f',4));
 
-    currentLength = decodeData[2];
+
     ui->displacement_sensors->display(QString::number(currentLength-MainWindow::myWorker->details.factLengthZero,'f',4));
 
     currentStrain = currentLength/MainWindow::myWorker->details.targetSize;
     ui->strain->display(QString::number(currentStrain,'f',4));
 
-    currentTime = decodeData[3];
     ui->Duration->display(QString::number(currentTime-startTime,'f',4));
-
-    *force_time_Series<<QPointF(currentTime,currentForce);
-
-    *length_time_Series<<QPointF(currentTime,currentLength);
-
-    *force_length_Series<<QPointF(currentLength-MainWindow::myWorker->details.lengthZero,currentForce);
-
-    *stress_strain_Series<<QPointF(currentStrain,currentStress);
-
-    float tempForce = currentForce;
-    float temptargetLength = targetLength-MainWindow::myWorker->details.lengthZero;
-    float tempcurrentLength = currentLength-MainWindow::myWorker->details.factLengthZero;
-    float tempTime = currentTime - startTime;
-
-    QList<float> temp = {tempForce,temptargetLength,tempcurrentLength,tempTime};
-
-    factData.append(temp);
-
-
 
     switch (checkWaveId) {
     case 1:
         if(!chart->series().isEmpty())
         {
-            qDebug()<<chart->series().first();
             chart->removeSeries(force_time_Series);
             chart->removeSeries(length_time_Series);
             chart->removeSeries(force_length_Series);
@@ -153,6 +173,31 @@ void testWidget::fresh(QList<float> decodeData)
         break;
     }
     chart->createDefaultAxes();
+}
+
+void testWidget::fresh(QList<float> decodeData)
+{
+    //0:S0力，10：S10计算位移,13：S13位移传感,29：时间
+    currentForce = decodeData[0];
+    targetLength = decodeData[1];
+    currentLength = decodeData[2];
+    currentTime = decodeData[3];
+
+
+    *force_time_Series<<QPointF(currentTime,currentForce);
+
+    *length_time_Series<<QPointF(currentTime,currentLength);
+
+    *force_length_Series<<QPointF(currentLength-MainWindow::myWorker->details.lengthZero,currentForce);
+
+    *stress_strain_Series<<QPointF(currentStrain,currentStress);
+
+    float tempForce = currentForce;
+    float temptargetLength = targetLength-MainWindow::myWorker->details.lengthZero;
+    float tempcurrentLength = currentLength-MainWindow::myWorker->details.factLengthZero;
+    float tempTime = currentTime - startTime;
+
+    factData.append({tempForce,temptargetLength,tempcurrentLength,tempTime});
 
 }
 
@@ -185,6 +230,7 @@ void testWidget::autoToZreoForce(int targetForce)
 
 void testWidget::on_up_clicked()
 {
+
     MainWindow::myControler->connectToControl();
     MainWindow::myControler->openCircleControl(-ui->matul->value(),3);
 }
@@ -207,6 +253,7 @@ void testWidget::on_down_clicked()
 void testWidget::on_startTest_clicked()
 {
     MainWindow::myControler->connectToControl();
+
 
     startTime = currentTime;
 
@@ -266,6 +313,10 @@ void testWidget::on_startTest_clicked()
             qDebug()<<tempflag;
         });
         mutiSaveTimer->start(mutiSaveTime);
+    }
+    else
+    {
+        autoStopTimer->start(500);
     }
 
 }
@@ -358,6 +409,7 @@ void testWidget::on_saveTest_clicked()
 
 void testWidget::on_stopTest_clicked()
 {
+    autoStopTimer->stop();
     MainWindow::myControler->openCircleControl_STOP(3);
     MainWindow::myControler->disconnectToControl();
     factSeries->clear();
@@ -392,22 +444,13 @@ void testWidget::on_mutiSaveOpen_toggled(bool checked)
     mutiSaveFlag = checked;
 
 
-    if(mutiSaveFlag||autoFlag)
+    if(mutiSaveFlag)
     {
-        ui->startTest->setEnabled(false);
-        ui->up->setEnabled(false);
-        ui->down->setEnabled(false);
         QMessageBox msgBox;
         msgBox.setText("警告：非必要不要用，严格按照说明执行本开关程序，否则可能会损坏机器！");
         msgBox.exec();
     }
-    else
-    {
-        ui->startTest->setEnabled(true);
-        ui->up->setEnabled(true);
-        ui->down->setEnabled(true);
 
-    }
 
 }
 
@@ -421,7 +464,7 @@ void testWidget::on_autoMove_toggled(bool checked)
         MainWindow::myControler->channalClear(0);
         autoTimer->start(250);
     }
-    if(mutiSaveFlag||autoFlag)
+    if(autoFlag)
     {
         ui->startTest->setEnabled(false);
         ui->up->setEnabled(false);
