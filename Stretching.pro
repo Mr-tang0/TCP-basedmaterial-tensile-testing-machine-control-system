@@ -17,6 +17,7 @@ SOURCES += \
     chart.cpp \
     controler.cpp \
     decodethread.cpp \
+    loginwidget.cpp \
     main.cpp \
     mainwindow.cpp \
     mylcdnumber.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     controler.h \
     decodethread.h \
     includeHeader.h \
+    loginwidget.h \
     mainwindow.h \
     mylcdnumber.h \
     newtestwidget.h \
@@ -43,6 +45,7 @@ HEADERS += \
     worker.h
 
 FORMS += \
+    loginwidget.ui \
     mainwindow.ui \
     newtestwidget.ui \
     systemsetwidget.ui \

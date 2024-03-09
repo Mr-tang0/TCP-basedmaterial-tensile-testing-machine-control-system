@@ -42,6 +42,16 @@ tcpClient::tcpClient(QObject *parent)
         }
     });
 
+    connect(mySocket,&QTcpSocket::connected,this, [=](){
+        qDebug()<<"connected!";
+        timer->start(1000/details.sampleRate);//这个是开启接受计时器，由于传感器发送数据过快，为避免拥堵，按照设置采样率去接受处理
+        emit connected();
+    });
+    connect(mySocket,&QTcpSocket::disconnected,this,[=](){
+        qDebug()<<"disconnected!";
+        timer->stop();
+        emit disconnected();
+    });
 
 }
 void tcpClient::MutiDecode()
@@ -100,18 +110,12 @@ bool tcpClient::tcpConnect()
 
     mySocket->connectToHost(QHostAddress(IPAddress),portNumber);
 
-    connect(mySocket,&QTcpSocket::connected,this, [=](){
-        qDebug()<<"connected!";
-        timer->start(1000/details.sampleRate);//这个是开启接受计时器，由于传感器发送数据过快，为避免拥堵，按照设置采样率去接受处理
-        emit connected();
-    });
-    connect(mySocket,&QTcpSocket::disconnected,this,[=](){
-        qDebug()<<"disconnected!";
-        timer->stop();
-        emit disconnected();
-    });
-
     return mySocket->isOpen();
+}
+
+bool tcpClient::tcpDisconnect()
+{
+    return mySocket->disconnect();
 }
 
 bool tcpClient::sendMessage(QByteArray message)

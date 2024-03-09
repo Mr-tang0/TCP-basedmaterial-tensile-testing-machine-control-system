@@ -37,7 +37,13 @@
 #include <QtCharts/QChartView>
 //charts宏
 QT_CHARTS_USE_NAMESPACE
-#include<QRandomGenerator>
+#include <QRandomGenerator>
+#include <QFileInfo>
+#include <QDir>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QCryptographicHash>
+
 
 struct tcpClient_details
 {

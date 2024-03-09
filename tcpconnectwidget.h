@@ -2,6 +2,7 @@
 #define TCPCONNECTWIDGET_H
 
 #include <QWidget>
+#include "loginwidget.h"
 
 namespace Ui {
 class TcpConnectWidget;
@@ -20,8 +21,11 @@ private slots:
 
     void on_disconnect_Button_clicked();
 
+    void on_commandLinkButton_clicked();
+
 private:
     Ui::TcpConnectWidget *ui;
+    loginWidget *login = new loginWidget;
 };
 
 #endif // TCPCONNECTWIDGET_H

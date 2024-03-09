@@ -72,12 +72,15 @@ private:
     float currentTime = 0;//时间
     float startTime = 0;
 
-    int test = 0;
     QTimer *mutiSaveTimer = new QTimer;
+    int mutiSaveTime = 500;//强保存时间
     bool tempflag = false;
     int checkWaveId = 1;
 signals:
+    void startTest(QString testType);
     void saved();
+    void failed();
+    void clear();
 };
 
 #endif // TESTWIDGET_H

@@ -68,7 +68,6 @@ testWidget::~testWidget()
 void testWidget::fresh(QList<float> decodeData)
 {
     //0:S0力，10：S10计算位移,13：S13位移传感,29：时间
-    test++;
 
     currentForce = decodeData[0];
     ui->load->display(QString::number(currentForce,'f',2));
@@ -186,25 +185,29 @@ void testWidget::autoToZreoForce(int targetForce)
 
 void testWidget::on_up_clicked()
 {
-
+    MainWindow::myControler->connectToControl();
     MainWindow::myControler->openCircleControl(-ui->matul->value(),3);
 }
 
 
 void testWidget::on_stop_clicked()
 {
+    MainWindow::myControler->connectToControl();
     MainWindow::myControler->openCircleControl_STOP(3);
 }
 
 
 void testWidget::on_down_clicked()
 {
+    MainWindow::myControler->connectToControl();
     MainWindow::myControler->openCircleControl(ui->matul->value(),3);
 }
 
 
 void testWidget::on_startTest_clicked()
 {
+    MainWindow::myControler->connectToControl();
+
     startTime = currentTime;
 
     force_time_Series->clear();
@@ -220,6 +223,7 @@ void testWidget::on_startTest_clicked()
         detail.controlSpeed = MainWindow::myWorker->details.speed;
         detail.targetValue = MainWindow::myWorker->details.lengthZero+MainWindow::myWorker->details.length;
         MainWindow::myControler->closeCircleControl_Length(detail);
+        emit startTest("拉伸中");
     }
     else if(MainWindow::myWorker->details.testType=="压缩")
     {
@@ -228,6 +232,7 @@ void testWidget::on_startTest_clicked()
         detail.controlSpeed = MainWindow::myWorker->details.speed;
         detail.targetValue = MainWindow::myWorker->details.lengthZero-MainWindow::myWorker->details.length;
         MainWindow::myControler->closeCircleControl_Length(detail);
+        emit startTest("压缩中");
     }
     else
     {
@@ -240,6 +245,7 @@ void testWidget::on_startTest_clicked()
         detail.amplitude_bottom = MainWindow::myWorker->details.lengthZero+MainWindow::myWorker->details.cycleLength;
         detail.waveNumber = MainWindow::myWorker->details.cycleNumber;
         MainWindow::myControler->closeCircleControl_Wave(detail);
+        emit startTest("疲劳加载中");
 
     }
     if(mutiSaveFlag)
@@ -250,26 +256,34 @@ void testWidget::on_startTest_clicked()
             {
                 MainWindow::myControler->disconnectToControl();
 
-                StrongSaveTest(MainWindow::myWorker->details.filePath+"//temp"+MainWindow::myWorker->details.fileName.arg(QDateTime::currentDateTime().toString("yy_MM_dd+hh_mm_ss")));
+                on_mutiSave_clicked();
+
                 qDebug()<<"STOP!";
                 mutiSaveTimer->stop();
-                MainWindow::myControler->connectToControl("192.168.0.20",6000,1000);
+                MainWindow::myControler->connectToControl();
             }
             tempflag = !tempflag;
             qDebug()<<tempflag;
         });
-        mutiSaveTimer->start(1000);
+        mutiSaveTimer->start(mutiSaveTime);
     }
 
 }
 void testWidget::saveTest(QString filePath)
 {
-    QFile labelFile(filePath);
-    if(!labelFile.open(QIODevice::Append|QIODevice::Text))
-    {
-        qDebug()<<"指定位置不存在!";
+    QFileInfo fileInfo(filePath);
+    QString directoryPath = fileInfo.absolutePath();
+    QString fileName = fileInfo.fileName();
+
+    // 检查并创建文件夹（如果不存在）
+    if (!QDir(directoryPath).exists()) {
+        bool flag =QDir().mkdir(directoryPath);
+        if(!flag) emit failed();
     }
-    else {
+
+    QFile labelFile(filePath);
+    if(labelFile.open(QIODevice::Append|QIODevice::Text))
+    {
         QTextStream out(&labelFile);
         out<<"Force";
         out<<",";
@@ -279,7 +293,6 @@ void testWidget::saveTest(QString filePath)
         out<<",";
         out<<"Time";
         out<<"\n";
-
 
         for (int i = 0;i<factData.length();i++)
         {
@@ -291,19 +304,27 @@ void testWidget::saveTest(QString filePath)
             out<<"\n";
         }
         labelFile.close();
+        emit saved();
     }
 
-    qDebug()<<"保存成功！";
-    emit saved();
+
+
 }
 void testWidget::StrongSaveTest(QString filePath)
 {
-    QFile labelFile(filePath);
-    if(!labelFile.open(QIODevice::Append|QIODevice::Text))
-    {
-        qDebug()<<"指定位置不存在!";
+    QFileInfo fileInfo(filePath);
+    QString directoryPath = fileInfo.absolutePath();
+    QString fileName = fileInfo.fileName();
+
+    // 检查并创建文件夹（如果不存在）
+    if (!QDir(directoryPath).exists()) {
+        bool flag =QDir().mkdir(directoryPath);
+        if(!flag) emit failed();
     }
-    else {
+
+    QFile labelFile(filePath);
+    if(labelFile.open(QIODevice::Append|QIODevice::Text))
+    {
         QTextStream out(&labelFile);
         out<<"TEP";
         int strLength = tcpClient::mutireadBuffer.length()/218;
@@ -314,10 +335,9 @@ void testWidget::StrongSaveTest(QString filePath)
         }
 
         labelFile.close();
+        emit saved();
     }
 
-    qDebug()<<"保存成功！";
-    emit saved();
 }
 
 void testWidget::on_setLengthZero_clicked()
@@ -350,18 +370,20 @@ void testWidget::on_clearTest_clicked()
     force_time_Series->clear();
     length_time_Series->clear();
     force_length_Series->clear();
+    emit clear();
 }
 
 
 void testWidget::on_emergency_clicked()
 {
+
     MainWindow::myControler->openCircleControl_STOP(3);
 }
 
 
 void testWidget::on_mutiSave_clicked()
 {
-    StrongSaveTest(MainWindow::myWorker->details.filePath+"//temp"+MainWindow::myWorker->details.fileName);
+    StrongSaveTest(MainWindow::myWorker->details.filePath+"/temp_"+MainWindow::myWorker->details.fileName+".temp");
 }
 
 
@@ -369,15 +391,22 @@ void testWidget::on_mutiSaveOpen_toggled(bool checked)
 {
     mutiSaveFlag = checked;
 
-    if(mutiSaveFlag)
+
+    if(mutiSaveFlag||autoFlag)
     {
+        ui->startTest->setEnabled(false);
+        ui->up->setEnabled(false);
+        ui->down->setEnabled(false);
         QMessageBox msgBox;
         msgBox.setText("警告：非必要不要用，严格按照说明执行本开关程序，否则可能会损坏机器！");
         msgBox.exec();
     }
     else
     {
-        qDebug()<<"released";
+        ui->startTest->setEnabled(true);
+        ui->up->setEnabled(true);
+        ui->down->setEnabled(true);
+
     }
 
 }
@@ -385,13 +414,25 @@ void testWidget::on_mutiSaveOpen_toggled(bool checked)
 
 void testWidget::on_autoMove_toggled(bool checked)
 {
+    MainWindow::myControler->connectToControl();
     autoFlag = checked;
     if(!autoTimer->isActive())
     {
         MainWindow::myControler->channalClear(0);
         autoTimer->start(250);
     }
-    if(!autoFlag)autoTimer->stop();
+    if(mutiSaveFlag||autoFlag)
+    {
+        ui->startTest->setEnabled(false);
+        ui->up->setEnabled(false);
+        ui->down->setEnabled(false);
+
+    }else{
+        ui->startTest->setEnabled(true);
+        ui->up->setEnabled(true);
+        ui->down->setEnabled(true);
+        autoTimer->stop();
+    }
 
 }
 

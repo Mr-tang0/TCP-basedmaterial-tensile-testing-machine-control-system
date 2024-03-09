@@ -21,18 +21,26 @@ bool Controler::connectToControl(QString IP,int port,int samplerate)
     myClient->details.portNumber = port;
     myClient->details.sampleRate = samplerate;
 
-    myClient->tcpConnect();
 
+    bool flag;
     if(!myClient->isopen())
     {
-        return false;
+        myClient->tcpConnect();
+        flag = myClient->sendMessage(cmd.CMD_connent.toUtf8());
+        connect(myClient,&tcpClient::decodeDone,this,[=](QList<float> decodedData){
+            emit decodeDone(decodedData);
+        });
+        return myClient->isopen();
+    } 
+    else
+    {
+        flag = myClient->sendMessage(cmd.CMD_connent.toUtf8());
     }
-
-    connect(myClient,&tcpClient::decodeDone,this,[=](QList<float> decodedData){
-        emit decodeDone(decodedData);
-    });
+    return flag;
+}
+bool Controler::connectToControl()
+{
     bool flag = myClient->sendMessage(cmd.CMD_connent.toUtf8());
-
     return flag;
 
 }
@@ -44,6 +52,7 @@ bool Controler::disconnectToControl()
     {
         return false;
     }
+
     return myClient->sendMessage(cmd.CMD_disconnent.toUtf8());
 }
 

@@ -18,6 +18,7 @@ public:
     bool isConnected();
 
     bool connectToControl(QString IP,int port,int samplerate);
+    bool connectToControl();
     bool disconnectToControl();
 
     void openCircleControl(int controlSpeed,int controlChannal);

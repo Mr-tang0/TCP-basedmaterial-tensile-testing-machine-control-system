@@ -73,7 +73,6 @@
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
-    <addaction name="actionClear"/>
     <addaction name="actionSave"/>
     <addaction name="actionExit"/>
    </widget>

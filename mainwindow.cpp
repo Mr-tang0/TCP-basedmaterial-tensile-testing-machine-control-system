@@ -63,8 +63,11 @@ void MainWindow::initThis()
     });
     connect(myControler,&Controler::decodeDone,test,&testWidget::fresh);//连接解码和界面
 
-    connect(test,&testWidget::saved,[=](){
+    connect(test,&testWidget::saved,this,[=](){
         m_snackbar->addMessage("保存成功!");
+    });
+    connect(test,&testWidget::clear,this,[=](){
+        m_snackbar->addMessage("已清除!");
     });
 
 }
@@ -81,9 +84,6 @@ void MainWindow::on_actionNew_triggered()
     system->hide();
     newTest->show();
 }
-
-
-
 
 
 void MainWindow::on_TCP_actionn_triggered()
@@ -111,6 +111,11 @@ void MainWindow::on_actionOpen_triggered()
         connect(decode,&decodeThread::decodeDone,test,&testWidget::fresh);//连接解码和界面
         if(fileData.mid(0,3)=="TEP")
         {
+            QFileInfo fileinfo(filePath);
+            myWorker->details.filePath = fileinfo.absoluteFilePath();
+
+            myWorker->details.fileName = fileinfo.fileName().remove(0,5)+"_decode";
+
             fileData.remove(0,3);
 
             QString temp;
@@ -186,3 +191,12 @@ void MainWindow::delay(int delayTime)
     loop.exec();
 
 }
+
+
+void MainWindow::on_actionSave_triggered()
+{
+    QString filePath  = myWorker->details.filePath+"/"+myWorker->details.fileName+".csv";
+    qDebug()<<filePath;
+    test->saveTest(filePath);
+}
+

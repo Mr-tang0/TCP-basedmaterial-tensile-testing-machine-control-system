@@ -40,6 +40,13 @@ void newTestWidget::initThis()
     QString timeString = QDateTime::currentDateTime().toString("yy-MM-dd-hh:mm:ss");
     ui->time_lineEidt->setText(timeString);
 
+    QString rootPath  = QCoreApplication::applicationDirPath()+"/data/"+MainWindow::myWorker->details.UseName;
+    ui->filePath_lineEdit->setText(rootPath);
+
+    ui->number_lineEidt->setText(MainWindow::myWorker->details.Number);
+
+    ui->filePath_lineEdit_2->setText(MainWindow::myWorker->details.UseName+"TEST"+MainWindow::myWorker->details.Number);
+
 }
 
 void newTestWidget::on_cancel_clicked()
@@ -52,10 +59,15 @@ void newTestWidget::on_Checked_clicked()
 {
     //基础信息
     if(ui->userName_lineEidt->text()!="")MainWindow::myWorker->details.UseName = ui->userName_lineEidt->text();
+
     if(ui->number_lineEidt->text()!="")MainWindow::myWorker->details.Number = ui->number_lineEidt->text();
+
     MainWindow::myWorker->details.testTime = ui->time_lineEidt->text();
+
     MainWindow::myWorker->details.testType = myRadioGroup->checkedButton()->text();
+
     if(ui->filePath_lineEdit->text()!="")MainWindow::myWorker->details.filePath = ui->filePath_lineEdit->text();
+
     if(ui->filePath_lineEdit_2->text()!="")
         MainWindow::myWorker->details.fileName = ui->filePath_lineEdit_2->text();
     else
