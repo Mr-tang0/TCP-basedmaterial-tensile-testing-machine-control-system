@@ -14,3 +14,15 @@ systemSetWidget::~systemSetWidget()
 {
     delete ui;
 }
+
+void systemSetWidget::on_Checked_clicked()
+{
+    this->hide();
+}
+
+
+void systemSetWidget::on_cancel_clicked()
+{
+    this->hide();
+}
+

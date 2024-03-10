@@ -17,6 +17,23 @@ public:
 
 private:
     Ui::systemSetWidget *ui;
+    void showEvent(QShowEvent*event)
+    {
+        emit thisShow();
+        QWidget::showEvent(event);
+    }
+    void hideEvent(QHideEvent*event)
+    {
+        emit thisHide();
+        QWidget::hideEvent(event);
+    }
+
+signals:
+    void thisShow();
+    void thisHide();
+private slots:
+    void on_Checked_clicked();
+    void on_cancel_clicked();
 };
 
 #endif // SYSTEMSETWIDGET_H

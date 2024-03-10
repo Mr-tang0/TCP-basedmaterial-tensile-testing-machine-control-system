@@ -287,7 +287,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_15">
+      <layout class="QVBoxLayout" name="verticalLayout_15" stretch="0,0">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_14">
          <item>
@@ -461,7 +461,7 @@ background-color: rgb(255, 131, 131);</string>
                 </size>
                </property>
                <property name="text">
-                <string> </string>
+                <string/>
                </property>
               </widget>
              </item>
@@ -562,6 +562,16 @@ background-color: rgb(255, 131, 131);</string>
                </property>
                <property name="text">
                 <string>应力-应变</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_speedTotime">
+               <property name="styleSheet">
+                <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+               </property>
+               <property name="text">
+                <string>速度-时间</string>
                </property>
               </widget>
              </item>

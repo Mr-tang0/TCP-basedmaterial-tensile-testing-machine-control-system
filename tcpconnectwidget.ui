@@ -122,11 +122,20 @@
              <height>16777215</height>
             </size>
            </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">font: 6pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
            <property name="text">
             <string>切换</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>18</height>
+            </size>
            </property>
           </widget>
          </item>

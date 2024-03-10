@@ -64,7 +64,10 @@ private:
     QLineSeries *length_time_Series = new QLineSeries();
     QLineSeries *force_length_Series = new QLineSeries();
     QLineSeries *stress_strain_Series = new QLineSeries();
+    QLineSeries *speed_time_Series = new QLineSeries();
+
     QChart *chart = new QChart();
+
     void drawer();
 
     float currentForce = 0;//载荷
@@ -73,6 +76,7 @@ private:
     float currentLength = 0;//位移传感器
     float currentStrain = 0;//应变
     float currentTime = 0;//时间
+    float currentSpeed = 0;//速度
     float startTime = 0;
 
     QTimer *autoStopTimer = new QTimer;

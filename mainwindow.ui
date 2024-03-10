@@ -88,7 +88,7 @@ font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
     <property name="title">
      <string>工具</string>
     </property>
-    <addaction name="actiona"/>
+    <addaction name="actioncalculator"/>
    </widget>
    <widget class="QMenu" name="more_menu">
     <property name="title">
@@ -96,6 +96,7 @@ font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
     </property>
     <addaction name="action_help"/>
     <addaction name="actionabout"/>
+    <addaction name="actionsystem"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="font">
@@ -154,7 +155,7 @@ font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
     <string>退出</string>
    </property>
   </action>
-  <action name="actiona">
+  <action name="actioncalculator">
    <property name="text">
     <string>计算器</string>
    </property>
@@ -172,6 +173,11 @@ font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
   <action name="action_login">
    <property name="text">
     <string>登录注册</string>
+   </property>
+  </action>
+  <action name="actionsystem">
+   <property name="text">
+    <string>设置</string>
    </property>
   </action>
  </widget>

@@ -14,6 +14,7 @@ LIBS+=$$PWD/libs/libcomponents.a
 INCLUDEPATH+=$$PWD/libs/Include
 
 SOURCES += \
+    calculator.cpp \
     chart.cpp \
     controler.cpp \
     decoderunworker.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
     worker.cpp
 
 HEADERS += \
+    calculator.h \
     chart.h \
     commandList.h \
     controler.h \
@@ -47,6 +49,7 @@ HEADERS += \
     worker.h
 
 FORMS += \
+    calculator.ui \
     loginwidget.ui \
     mainwindow.ui \
     newtestwidget.ui \

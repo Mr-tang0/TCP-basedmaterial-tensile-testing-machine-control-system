@@ -16,6 +16,7 @@ public:
     explicit TcpConnectWidget(QWidget *parent = nullptr);
     ~TcpConnectWidget();
     void commandLinkButton_clicked();
+    loginWidget *login= new loginWidget;
 
 
 private slots:
@@ -28,7 +29,7 @@ private slots:
 
 private:
     Ui::TcpConnectWidget *ui;
-    loginWidget *login = new loginWidget;
+
 };
 
 #endif // TCPCONNECTWIDGET_H

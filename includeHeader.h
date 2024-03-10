@@ -44,6 +44,7 @@ QT_CHARTS_USE_NAMESPACE
 #include <QJsonDocument>
 #include <QCryptographicHash>
 #include <QThreadPool>
+#include <QApplication>
 
 struct tcpClient_details
 {

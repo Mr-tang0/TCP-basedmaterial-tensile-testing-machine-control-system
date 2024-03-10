@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 #include <QColorDialog>
 #include <qtmaterialdrawer.h>
-
+#include "calculator.h"
 
 Controler *MainWindow::myControler = new Controler;
 worker *MainWindow::myWorker = new worker;
@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     m_snackbar->setParent(this);
+    m_snackbar->setFont(QFont("幼圆"));
+
     m_drawer->setParent(ui->maiWidget);
     m_drawer->setClickOutsideToClose(true);
     m_drawer->setOverlayMode(true);
@@ -55,6 +57,11 @@ void MainWindow::initThis()
         system->hide();
         newTest->hide();
     });
+    connect(system,&systemSetWidget::thisHide,this,[=](){
+        test->show();
+        system->hide();
+        newTest->hide();
+    });
 
 
     connect(Controler::myClient,&tcpClient::connected,this,[=](){
@@ -68,9 +75,15 @@ void MainWindow::initThis()
     connect(test,&testWidget::saved,this,[=](){
         m_snackbar->addMessage("保存成功!");
     });
+    connect(test,&testWidget::failed,this,[=](){
+        m_snackbar->addMessage("保存失败!");
+    });
     connect(test,&testWidget::clear,this,[=](){
         m_snackbar->addMessage("已清除!");
     });
+    // connect(TcpConnectWidget::login,&loginWidget::thisHide,this,[=](){this->show();});
+    // connect(TcpConnectWidget::login,&loginWidget::thisShow,this,[=](){this->hide();});
+
 
 }
 
@@ -207,7 +220,39 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_action_login_triggered()
 {
-    m_drawer->openDrawer();
     mytcp->commandLinkButton_clicked();
+    // this->setEnabled(false);
+}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+    QMessageBox msgBox;
+    msgBox.setText("提示");
+    msgBox.setInformativeText("确认数据已保存?");
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    int ret = msgBox.exec();
+    if(ret == QMessageBox::Ok)
+    {
+        this->close();
+    }
+
+
+}
+
+
+void MainWindow::on_actionsystem_triggered()
+{
+    test->hide();
+    system->show();
+    newTest->hide();
+}
+
+
+void MainWindow::on_actioncalculator_triggered()
+{
+    calculator *mycalculator =new calculator;
+    mycalculator->show();
 }
 

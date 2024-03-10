@@ -44,6 +44,12 @@ private slots:
 
     void on_action_login_triggered();
 
+    void on_actionExit_triggered();
+
+    void on_actionsystem_triggered();
+
+    void on_actioncalculator_triggered();
+
 private:
     Ui::MainWindow *ui;
     TcpConnectWidget *mytcp =new TcpConnectWidget;
@@ -56,5 +62,21 @@ private:
     QtMaterialDrawer *const m_drawer;
     void delay(int delayTime);
     int temp_ = 0;
+
+protected:
+    void closeEvent(QCloseEvent *event)
+    {
+        QMessageBox msgBox;
+        msgBox.setText("提示");
+        msgBox.setInformativeText("确认数据已保存?");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        int ret = msgBox.exec();
+        if(ret == QMessageBox::Ok){
+            event->accept();
+        }else{
+            event->ignore();
+        }
+    }
 };
 #endif // MAINWINDOW_H

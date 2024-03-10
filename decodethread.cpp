@@ -133,7 +133,7 @@ void decodeThread::readFile(QString data)
             emit decodeDone(tempDecodeData);
 
             QEventLoop loop;
-            QTimer::singleShot(1,&loop,SLOT(quit()));
+            QTimer::singleShot(100,&loop,SLOT(quit()));
             loop.exec();
         }
         i++;

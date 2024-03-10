@@ -11,14 +11,14 @@ testWidget::testWidget(QWidget *parent)
     , ui(new Ui::testWidget)
 {
     ui->setupUi(this);
-    ui->graphicsView->setChart(chart);
 
-    QLineSeries *temSeries = new QLineSeries;
-    chart->addSeries(temSeries);
-    *temSeries<<QPointF(0,0);
+
+    chart->addSeries(force_time_Series);
+
     chart->legend()->hide();
     chart->createDefaultAxes();
-    chart->removeSeries(temSeries);
+
+    ui->graphicsView->setChart(chart);
 
 
     QButtonGroup *myRadioGroup = new QButtonGroup(this);
@@ -27,6 +27,7 @@ testWidget::testWidget(QWidget *parent)
     myRadioGroup->addButton(ui->radioButton_lengthToTime,2);
     myRadioGroup->addButton(ui->radioButton_forceToLength,3);
     myRadioGroup->addButton(ui->radioButton_stresToStrain,4);
+    myRadioGroup->addButton(ui->radioButton_speedTotime,5);
 
     connect(myRadioGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),this,[=](){
         checkWaveId = myRadioGroup->checkedId();
@@ -87,6 +88,8 @@ testWidget::testWidget(QWidget *parent)
 
     uiFreshTimer->start(100);
     freshUiFlag = true;
+
+
 }
 
 testWidget::~testWidget()
@@ -113,7 +116,7 @@ void testWidget::freshUi()
 
     ui->load->display(QString::number(currentForce,'f',2));
 
-    currentStress = currentForce/MainWindow::myWorker->details.targetSize;
+
     ui->stress->display(QString::number(currentStress,'f',2));
 
 
@@ -122,66 +125,56 @@ void testWidget::freshUi()
 
     ui->displacement_sensors->display(QString::number(currentLength-MainWindow::myWorker->details.factLengthZero,'f',4));
 
-    currentStrain = currentLength/MainWindow::myWorker->details.targetSize;
+
     ui->strain->display(QString::number(currentStrain,'f',4));
 
     ui->Duration->display(QString::number(currentTime-startTime,'f',4));
 
+    if(!chart->series().isEmpty())
+    {
+        chart->removeSeries(chart->series().first());
+    }
+
     switch (checkWaveId) {
     case 1:
-        if(!chart->series().isEmpty())
-        {
-            chart->removeSeries(force_time_Series);
-            chart->removeSeries(length_time_Series);
-            chart->removeSeries(force_length_Series);
-            chart->removeSeries(stress_strain_Series);
-        }
-        qDebug()<<QPointF(currentTime,currentForce);
+
         chart->addSeries(force_time_Series);
         break;
     case 2:
-        if(!chart->series().isEmpty())
-        {
-            chart->removeSeries(force_time_Series);
-            chart->removeSeries(length_time_Series);
-            chart->removeSeries(force_length_Series);
-            chart->removeSeries(stress_strain_Series);
-        }
         chart->addSeries(length_time_Series);
         break;
     case 3:
-        if(!chart->series().isEmpty())
-        {
-            chart->removeSeries(force_time_Series);
-            chart->removeSeries(length_time_Series);
-            chart->removeSeries(force_length_Series);
-            chart->removeSeries(stress_strain_Series);
-        }
         chart->addSeries(force_length_Series);
         break;
     case 4:
-        if(!chart->series().isEmpty())
-        {
-            chart->removeSeries(force_time_Series);
-            chart->removeSeries(length_time_Series);
-            chart->removeSeries(force_length_Series);
-            chart->removeSeries(stress_strain_Series);
-        }
         chart->addSeries(stress_strain_Series);
+        break;
+    case 5:
+        chart->addSeries(speed_time_Series);
         break;
     default:
         break;
     }
     chart->createDefaultAxes();
+
 }
 
 void testWidget::fresh(QList<float> decodeData)
 {
     //0:S0力，10：S10计算位移,13：S13位移传感,29：时间
     currentForce = decodeData[0];
+
+
+    if(decodeData[2]-currentLength!=0 && decodeData[3]-currentTime!=0)
+    {
+        currentSpeed = (decodeData[2]-currentLength)/(decodeData[3]-currentTime);
+    }
+
     targetLength = decodeData[1];
     currentLength = decodeData[2];
     currentTime = decodeData[3];
+    currentStress = currentForce/MainWindow::myWorker->details.targetSize;
+    currentStrain = currentLength/MainWindow::myWorker->details.targetSize;
 
 
     *force_time_Series<<QPointF(currentTime,currentForce);
@@ -191,6 +184,8 @@ void testWidget::fresh(QList<float> decodeData)
     *force_length_Series<<QPointF(currentLength-MainWindow::myWorker->details.lengthZero,currentForce);
 
     *stress_strain_Series<<QPointF(currentStrain,currentStress);
+
+    *speed_time_Series<<QPointF(currentTime,currentSpeed);
 
     float tempForce = currentForce;
     float temptargetLength = targetLength-MainWindow::myWorker->details.lengthZero;
@@ -403,7 +398,8 @@ void testWidget::on_saveTest_clicked()
 {
     QString filePath  = MainWindow::myWorker->details.filePath+"/"+MainWindow::myWorker->details.fileName+".csv";
     qDebug()<<filePath;
-    saveTest(filePath);
+    if(MainWindow::myWorker->details.filePath=="C:/") emit failed();
+    else saveTest(filePath);
 }
 
 
@@ -448,7 +444,9 @@ void testWidget::on_mutiSaveOpen_toggled(bool checked)
     {
         QMessageBox msgBox;
         msgBox.setText("警告：非必要不要用，严格按照说明执行本开关程序，否则可能会损坏机器！");
+        msgBox.setWindowFlags(Qt::Dialog|Qt::CustomizeWindowHint);
         msgBox.exec();
+
     }
 
 

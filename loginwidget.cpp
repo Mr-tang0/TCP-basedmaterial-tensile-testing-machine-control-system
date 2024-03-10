@@ -9,12 +9,17 @@ loginWidget::loginWidget(QWidget *parent)
 {
     ui->setupUi(this);
     m_snackbar->setParent(this);
+    m_snackbar->setFont(QFont("幼圆"));
+
     this->setWindowTitle("登录与注册");
     this->setWindowIcon(QIcon(":/new/prefix1/icon.png"));
     ui->userName->setLabel("userName");
     ui->passWord->setLabel("passWord");
 
+    this->setWindowFlags(Qt::CustomizeWindowHint);
+
     QString rootPath  = QCoreApplication::applicationDirPath();
+
     QFile file(rootPath+"/users.users");
 
     if(!file.open(QIODevice::ReadOnly))
