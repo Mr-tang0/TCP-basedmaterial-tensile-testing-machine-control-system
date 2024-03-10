@@ -17,6 +17,8 @@ public:
     TCPFrame messageToTrame(QByteArray message);
     float dataToFloat(QByteArray data);
     void readFile(QString data);
+
+    static bool readFlag;
 private:
     // QThreadPool *threadPool = new QThreadPool;
     int threadId = 0;

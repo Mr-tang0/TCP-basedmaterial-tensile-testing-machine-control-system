@@ -1,7 +1,7 @@
 ﻿#include "testwidget.h"
 #include "ui_testwidget.h"
 #include"mainwindow.h"
-
+#include<QToolTip>
 
 bool testWidget::mutiSaveFlag = false;
 bool testWidget::freshUiFlag = false;
@@ -13,8 +13,6 @@ testWidget::testWidget(QWidget *parent)
     ui->setupUi(this);
 
 
-    chart->addSeries(force_time_Series);
-
     chart->legend()->hide();
     chart->createDefaultAxes();
 
@@ -23,48 +21,37 @@ testWidget::testWidget(QWidget *parent)
 
     QButtonGroup *myRadioGroup = new QButtonGroup(this);
 
-    myRadioGroup->addButton(ui->radioButton_forceToTime,1);
-    myRadioGroup->addButton(ui->radioButton_lengthToTime,2);
-    myRadioGroup->addButton(ui->radioButton_forceToLength,3);
-    myRadioGroup->addButton(ui->radioButton_stresToStrain,4);
-    myRadioGroup->addButton(ui->radioButton_speedTotime,5);
+    myRadioGroup->addButton(ui->checkBox_forceToTime,1);
+    myRadioGroup->addButton(ui->checkBox_lengthToTime,2);
+    myRadioGroup->addButton(ui->checkBox_forceToLength,3);
+    myRadioGroup->addButton(ui->checkBox_stresToStrain,4);
+    myRadioGroup->addButton(ui->checkBox_speedTotime,5);
 
     connect(myRadioGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),this,[=](){
         checkWaveId = myRadioGroup->checkedId();
-        fresh({currentForce,targetLength,currentLength,currentTime});
     });
 
     connect(ui->load,&myLcdNumber::doubleClicked,this,[=](){
         MainWindow::myControler->channalClear(0);
     });
     connect(ui->displacement,&myLcdNumber::doubleClicked,this,[=](){
-        // MainWindow::myControler->channalClear(10);
         on_setLengthZero_clicked();
     });
     connect(ui->displacement_sensors,&myLcdNumber::doubleClicked,this,[=](){
-        // MainWindow::myControler->channalClear(13);
         on_setLengthZero_clicked();
     });
     connect(ui->Duration,&myLcdNumber::doubleClicked,this,[=](){
         MainWindow::myControler->channalClear(20);
     });
 
-    connect(ui->smoothCurve,&QCheckBox::toggled,[=](bool choose){
-        if(choose)
-        {
-            qDebug()<<"平滑曲线";
-        }
-        else
-            {
-            qDebug()<<"普通";
-        }
-    });
     connect(autoTimer,&QTimer::timeout,this,[=](){
         if(autoFlag) autoToZreoForce(5);
     });
+
     connect(uiFreshTimer,&QTimer::timeout,this,[=](){
         if(freshUiFlag) freshUi();
     });
+
     connect(autoStopTimer,&QTimer::timeout,this,[=](){
         switch (MainWindow::myWorker->details.stopAction) {
         case 0:
@@ -74,9 +61,6 @@ testWidget::testWidget(QWidget *parent)
             if(currentForce>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
             break;
         case 2:
-            if(currentForce>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
-            break;
-        case 3:
             if(targetLength-MainWindow::myWorker->details.lengthZero>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
             break;
         default:
@@ -86,9 +70,9 @@ testWidget::testWidget(QWidget *parent)
         ;
     });
 
-    uiFreshTimer->start(100);
-    freshUiFlag = true;
 
+    uiFreshTimer->start(150);
+    freshUiFlag = true;
 
 }
 
@@ -130,14 +114,14 @@ void testWidget::freshUi()
 
     ui->Duration->display(QString::number(currentTime-startTime,'f',4));
 
-    if(!chart->series().isEmpty())
+    while(!chart->series().isEmpty())
     {
         chart->removeSeries(chart->series().first());
     }
 
+
     switch (checkWaveId) {
     case 1:
-
         chart->addSeries(force_time_Series);
         break;
     case 2:
@@ -150,31 +134,50 @@ void testWidget::freshUi()
         chart->addSeries(stress_strain_Series);
         break;
     case 5:
+        qDebug()<<5;
         chart->addSeries(speed_time_Series);
         break;
     default:
+
         break;
     }
     chart->createDefaultAxes();
+
 
 }
 
 void testWidget::fresh(QList<float> decodeData)
 {
     //0:S0力，10：S10计算位移,13：S13位移传感,29：时间
-    currentForce = decodeData[0];
 
 
-    if(decodeData[2]-currentLength!=0 && decodeData[3]-currentTime!=0)
+    if(temptargetLengthList.length()>15)
     {
-        currentSpeed = (decodeData[2]-currentLength)/(decodeData[3]-currentTime);
+        temptargetLengthList.removeFirst();
+
+        tempTimeList.removeFirst();
+
+        if(decodeData[1]-temptargetLengthList.first()!=0 && decodeData[3]-tempTimeList.first()!=0)
+        {
+
+            float tempSpeed1 = (decodeData[1]-temptargetLengthList.first())/(decodeData[3]-tempTimeList.first());
+            float tempSpeed2 = (decodeData[1]-temptargetLengthList.last())/(decodeData[3]-tempTimeList.last());
+            float tempSpeed = tempSpeed1*0.95+tempSpeed2*0.05;
+
+            currentSpeed = tempSpeed*0.1+currentSpeed*0.9;
+        }
+
     }
 
+    currentForce = decodeData[0];
     targetLength = decodeData[1];
     currentLength = decodeData[2];
     currentTime = decodeData[3];
     currentStress = currentForce/MainWindow::myWorker->details.targetSize;
     currentStrain = currentLength/MainWindow::myWorker->details.targetSize;
+
+    temptargetLengthList<<targetLength;
+    tempTimeList<<currentTime;
 
 
     *force_time_Series<<QPointF(currentTime,currentForce);
@@ -252,11 +255,17 @@ void testWidget::on_startTest_clicked()
 
     startTime = currentTime;
 
+    factData.clear();
+
     force_time_Series->clear();
+
     length_time_Series->clear();
+
     force_length_Series->clear();
 
-    factData.clear();
+    stress_strain_Series->clear();
+
+    speed_time_Series ->clear();
 
     if(MainWindow::myWorker->details.testType=="拉伸")
     {
@@ -409,15 +418,24 @@ void testWidget::on_stopTest_clicked()
     MainWindow::myControler->openCircleControl_STOP(3);
     MainWindow::myControler->disconnectToControl();
     factSeries->clear();
+    decodeThread::readFlag = false;
 }
 
 
 void testWidget::on_clearTest_clicked()
 {
     factData.clear();
+
     force_time_Series->clear();
+
     length_time_Series->clear();
+
     force_length_Series->clear();
+
+    stress_strain_Series->clear();
+
+    speed_time_Series ->clear();
+
     emit clear();
 }
 

@@ -1,5 +1,7 @@
 ﻿#include "decodethread.h"
 
+bool decodeThread::readFlag = false;
+
 decodeThread::decodeThread(QObject *parent)
     : QObject{parent}
 {
@@ -117,26 +119,30 @@ void decodeThread::readFile(QString data)
 {
     int i = 0;
 
+    readFlag = true;
     bool ok;
 
     for (const QString &chunk : data.split("\n"))
     {
-        if(i!=0)//去表头
+        if(readFlag)
         {
-            QList<float> tempDecodeData;
-
-            for (const QString &temp : chunk.split(","))
+            if(i!=0)//去表头
             {
-                float value= temp.toFloat(&ok);
-                if(ok)tempDecodeData.append(value);
-            }
-            emit decodeDone(tempDecodeData);
+                QList<float> tempDecodeData;
 
-            QEventLoop loop;
-            QTimer::singleShot(100,&loop,SLOT(quit()));
-            loop.exec();
+                for (const QString &temp : chunk.split(","))
+                {
+                    float value= temp.toFloat(&ok);
+                    if(ok)tempDecodeData.append(value);
+                }
+                emit decodeDone(tempDecodeData);
+
+                QEventLoop loop;
+                QTimer::singleShot(1,&loop,SLOT(quit()));
+                loop.exec();
+            }
+            i++;
         }
-        i++;
     }
 
 

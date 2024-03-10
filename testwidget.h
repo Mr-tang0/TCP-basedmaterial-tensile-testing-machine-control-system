@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "includeHeader.h"
 #include "controler.h"
+#include<qsplineseries.h>
 
 namespace Ui {
 class testWidget;
@@ -59,24 +60,38 @@ private:
     void autoToZreoForce(int targetForce);
     QTimer *autoTimer = new QTimer;
 
-    QLineSeries *factSeries = new QLineSeries();
-    QLineSeries *force_time_Series = new QLineSeries();
-    QLineSeries *length_time_Series = new QLineSeries();
-    QLineSeries *force_length_Series = new QLineSeries();
-    QLineSeries *stress_strain_Series = new QLineSeries();
-    QLineSeries *speed_time_Series = new QLineSeries();
+    QSplineSeries *factSeries = new QSplineSeries();
+    QSplineSeries *force_time_Series = new QSplineSeries();
+    QSplineSeries *length_time_Series = new QSplineSeries();
+    QSplineSeries *force_length_Series = new QSplineSeries();
+    QSplineSeries *stress_strain_Series = new QSplineSeries();
+    QSplineSeries *speed_time_Series = new QSplineSeries();
 
     QChart *chart = new QChart();
 
     void drawer();
 
     float currentForce = 0;//载荷
+    QList<float> tempForceList;//载荷
+
     float currentStress= 0;//应力
+    QList<float> tempStressList;//载荷
+
     float targetLength = 0;//计算位移
+    QList<float> temptargetLengthList;//载荷
+
     float currentLength = 0;//位移传感器
+    QList<float> tempLengthList;//载荷
+
     float currentStrain = 0;//应变
+    QList<float> tempStrainList;//载荷
+
     float currentTime = 0;//时间
+    QList<float> tempTimeList;//载荷
+
     float currentSpeed = 0;//速度
+    QList<float> tempSpeedList;//载荷
+
     float startTime = 0;
 
     QTimer *autoStopTimer = new QTimer;
@@ -85,6 +100,9 @@ private:
     int mutiSaveTime = 500;//强保存时间
     bool tempflag = false;
     int checkWaveId = 1;
+
+    bool smoothFlag = false;
+
 signals:
     void startTest(QString testType);
     void saved();
@@ -100,6 +118,10 @@ protected:
         // 在这里执行你自己的处理逻辑
     }
     void resize();
+
+
 };
+
+
 
 #endif // TESTWIDGET_H
