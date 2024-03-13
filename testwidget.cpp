@@ -3,20 +3,62 @@
 #include"mainwindow.h"
 #include<QToolTip>
 
+
 bool testWidget::mutiSaveFlag = false;
 bool testWidget::freshUiFlag = false;
 
 testWidget::testWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::testWidget)
+    , leftButtonPressedFlag(false)
+    , m_oPrePos(0, 0)
 {
     ui->setupUi(this);
 
+    initThis();
 
+    QHBoxLayout* rangeSliderWidgetSpaceLayout = new QHBoxLayout();
+    rangeSliderWidgetSpaceLayout->addWidget(rangeSliderThre);
+    ui->widget->setLayout(rangeSliderWidgetSpaceLayout);
+
+    connect(rangeSliderThre,&RangeSlider::ValueChanged,[=](int low,int high){
+        resizeChart(low,high);
+    });
+
+
+}
+
+testWidget::~testWidget()
+{
+    delete ui;
+}
+
+void testWidget::initThis()
+{
     chart->legend()->hide();
-    chart->createDefaultAxes();
+    // chart->createDefaultAxes();
+
+    timeAxis->setTitleText("time(secs)");//标题
+    timeAxis->setLabelFormat("%.3f"); //标签格式：每个单位保留几位小数
+    timeAxis->setTickCount(10); //主分隔个数：0到10分成20个单位
+    timeAxis->setMinorTickCount(5); //每个单位之间绘制了多少虚网线
+    QFont font;
+    font.setPointSize(15);
+    timeAxis->setLabelsFont(font);
+
+
+    forceAxis->setTitleText("force(N)");//标题
+    forceAxis->setLabelFormat("%.1f"); //标签格式：每个单位保留几位小数
+    forceAxis->setTickCount(10); //主分隔个数：0到10分成20个单位
+    forceAxis->setMinorTickCount(5); //每个单位之间绘制了多少虚网线
+    forceAxis->setLabelsFont(font);
+
+
+
+    chart->addSeries(factSeries);
 
     ui->graphicsView->setChart(chart);
+
 
 
     QButtonGroup *myRadioGroup = new QButtonGroup(this);
@@ -29,6 +71,8 @@ testWidget::testWidget(QWidget *parent)
 
     connect(myRadioGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),this,[=](){
         checkWaveId = myRadioGroup->checkedId();
+        qDebug()<<checkWaveId;
+        freshUi();
     });
 
     connect(ui->load,&myLcdNumber::doubleClicked,this,[=](){
@@ -74,11 +118,62 @@ testWidget::testWidget(QWidget *parent)
     uiFreshTimer->start(150);
     freshUiFlag = true;
 
+
+
 }
 
-testWidget::~testWidget()
+// void testWidget::mouseMoveEvent(QMouseEvent *pEvent)
+// {
+//     if (leftButtonPressedFlag)
+//     {
+//         QPoint oDeltaPos = pEvent->pos() - m_oPrePos;
+//         this->chart->scroll(-oDeltaPos.x(), oDeltaPos.y());
+//         m_oPrePos = pEvent->pos();
+//     }
+// }
+// void testWidget::mousePressEvent(QMouseEvent *pEvent)
+// {
+//     if (pEvent->button() == Qt::LeftButton)
+//     {
+//         leftButtonPressedFlag = true;
+
+//         m_oPrePos = pEvent->pos();
+//         this->setCursor(Qt::OpenHandCursor);
+//     }
+//     qDebug()<<leftButtonPressedFlag<<m_oPrePos;
+
+// }
+// void testWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+// {
+//     if (pEvent->button() == Qt::LeftButton)
+//     {
+//         leftButtonPressedFlag = false;
+//         qDebug()<<leftButtonPressedFlag;
+//         this->setCursor(Qt::ArrowCursor);
+//     }
+
+// }
+
+
+void testWidget::wheelEvent(QWheelEvent *pEvent)
 {
-    delete ui;
+
+    qreal rVal = std::pow(0.999, pEvent->delta()); // 设置比例
+
+    QRectF oPlotAreaRect = chart->plotArea();
+    QPointF oCenterPoint = oPlotAreaRect.center();
+
+    // oPlotAreaRect.setWidth(oPlotAreaRect.width() * rVal);
+
+    oPlotAreaRect.setHeight(oPlotAreaRect.height() * rVal);
+
+    QPointF oNewCenterPoint(2 * oCenterPoint - pEvent->position() - (oCenterPoint - pEvent->position()) / rVal);
+
+    oPlotAreaRect.moveCenter(oNewCenterPoint);
+
+    this->chart->zoomIn(oPlotAreaRect);
+
+
 }
 
 void testWidget::resize()
@@ -97,6 +192,7 @@ void testWidget::resize()
 }
 void testWidget::freshUi()
 {
+
 
     ui->load->display(QString::number(currentForce,'f',2));
 
@@ -119,29 +215,66 @@ void testWidget::freshUi()
         chart->removeSeries(chart->series().first());
     }
 
+    // chart->removeAllSeries();
 
     switch (checkWaveId) {
     case 1:
         chart->addSeries(force_time_Series);
+
+
+        forceAxis->setTitleText("force(N)");//标题
+
+        if(!ForceList.isEmpty())forceAxis->setRange(min(ForceList,listLow,listHigh),max(ForceList,listLow,listHigh));//设置坐标轴范围
+
+        timeAxis->setTitleText("time(s)");//标题
+        if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
         break;
     case 2:
         chart->addSeries(length_time_Series);
+        forceAxis->setTitleText("length(mm)");//标题
+        if(!LengthList.isEmpty())forceAxis->setRange(min(LengthList,listLow,listHigh),max(LengthList,listLow,listHigh));//设置坐标轴范围
+
+        timeAxis->setTitleText("time(s)");//标题
+        if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
         break;
     case 3:
         chart->addSeries(force_length_Series);
+        forceAxis->setTitleText("force(N)");//标题
+        if(!ForceList.isEmpty())forceAxis->setRange(min(ForceList,listLow,listHigh),max(ForceList,listLow,listHigh));//设置坐标轴范围
+
+        timeAxis->setTitleText("length(mm)");//标题
+        if(!LengthList.isEmpty())timeAxis->setRange(min(LengthList,listLow,listHigh),max(LengthList,listLow,listHigh));//设置坐标轴范围
         break;
+
     case 4:
         chart->addSeries(stress_strain_Series);
+        forceAxis->setTitleText("stress");//标题
+        if(!StressList.isEmpty())forceAxis->setRange(min(StressList,listLow,listHigh),max(StressList,listLow,listHigh));//设置坐标轴范围
+
+        timeAxis->setTitleText("strain");//标题
+        if(!StrainList.isEmpty())timeAxis->setRange(min(StrainList,listLow,listHigh),max(StrainList,listLow,listHigh));//设置坐标轴范围
         break;
     case 5:
         qDebug()<<5;
         chart->addSeries(speed_time_Series);
+        forceAxis->setTitleText("speed(mm/s)");//标题
+        if(!SpeedList.isEmpty())forceAxis->setRange(min(SpeedList,listLow,listHigh),max(SpeedList,listLow,listHigh));//设置坐标轴范围
+
+        timeAxis->setTitleText("time(s)");//标题
+        if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
         break;
     default:
 
         break;
     }
-    chart->createDefaultAxes();
+
+    chart->addSeries(factSeries);
+
+    chart->setAxisX(timeAxis,factSeries);
+    chart->setAxisY(forceAxis,factSeries);
+
+
+
 
 
 }
@@ -178,6 +311,15 @@ void testWidget::fresh(QList<float> decodeData)
 
     temptargetLengthList<<targetLength;
     tempTimeList<<currentTime;
+
+    ForceList<<currentForce;
+    targetLengthList<<targetLength;
+    LengthList<<currentLength;
+    StressList<<currentStress;
+    StrainList<<currentStrain;
+    TimeList<<currentTime;
+    SpeedList<<currentSpeed;
+
 
 
     *force_time_Series<<QPointF(currentTime,currentForce);
@@ -250,6 +392,7 @@ void testWidget::on_down_clicked()
 
 void testWidget::on_startTest_clicked()
 {
+
     MainWindow::myControler->connectToControl();
 
 
@@ -301,6 +444,7 @@ void testWidget::on_startTest_clicked()
     }
     if(mutiSaveFlag)
     {
+        uiFreshTimer->stop();
         tcpClient::mutireadBuffer.clear();
         connect(mutiSaveTimer,&QTimer::timeout,this,[=](){
             if(tempflag)
@@ -320,6 +464,7 @@ void testWidget::on_startTest_clicked()
     }
     else
     {
+        uiFreshTimer->start(250);
         autoStopTimer->start(500);
     }
 
@@ -415,10 +560,14 @@ void testWidget::on_saveTest_clicked()
 void testWidget::on_stopTest_clicked()
 {
     autoStopTimer->stop();
+    uiFreshTimer->stop();
+
     MainWindow::myControler->openCircleControl_STOP(3);
     MainWindow::myControler->disconnectToControl();
     factSeries->clear();
     decodeThread::readFlag = false;
+
+
 }
 
 
@@ -436,7 +585,15 @@ void testWidget::on_clearTest_clicked()
 
     speed_time_Series ->clear();
 
-    emit clear();
+    ForceList.clear();
+    targetLengthList.clear();
+    LengthList.clear();
+    StressList.clear();
+    StrainList.clear();
+    TimeList.clear();
+    SpeedList.clear();
+
+    // emit clear();
 }
 
 
@@ -456,8 +613,6 @@ void testWidget::on_mutiSave_clicked()
 void testWidget::on_mutiSaveOpen_toggled(bool checked)
 {
     mutiSaveFlag = checked;
-
-
     if(mutiSaveFlag)
     {
         QMessageBox msgBox;
@@ -466,8 +621,6 @@ void testWidget::on_mutiSaveOpen_toggled(bool checked)
         msgBox.exec();
 
     }
-
-
 }
 
 
@@ -493,5 +646,51 @@ void testWidget::on_autoMove_toggled(bool checked)
         autoTimer->stop();
     }
 
+}
+
+
+void testWidget::resizeChart(int low,int high)
+{
+
+    int time1=0;
+    int time2=0;
+    if(!TimeList.isEmpty())
+    {
+        time1 = 0.01*low*TimeList.length();
+        time2 = 0.01*high*TimeList.length();
+    }
+
+    listLow = time1;
+    listHigh = time2;
+
+    force_time_Series->clear();
+
+    length_time_Series->clear();
+
+    force_length_Series->clear();
+
+    stress_strain_Series->clear();
+
+    speed_time_Series ->clear();
+
+    if(time2>TimeList.length())time2 = TimeList.length();
+    for (int i = time1; i < time2; ++i)
+    {
+        QPointF point = QPointF(TimeList[i],ForceList[i]);
+        *force_time_Series<<point;
+
+        point = QPointF(TimeList[i],LengthList[i]);
+        *length_time_Series<<point;
+
+        point = QPointF(LengthList[i],ForceList[i]);
+        *force_length_Series<<point;
+
+        point = QPointF(StrainList[i],StressList[i]);
+        *stress_strain_Series<<point;
+
+        point = QPointF(TimeList[i],SpeedList[i]);
+        *speed_time_Series <<point;
+    }
+    freshUi();
 }
 

@@ -65,6 +65,7 @@ void newTestWidget::on_Checked_clicked()
     MainWindow::myWorker->details.testTime = ui->time_lineEidt->text();
 
     MainWindow::myWorker->details.testType = myRadioGroup->checkedButton()->text();
+    MainWindow::myWorker->details.targetSize = ui->size_doubleSpinBox->value();
 
     if(ui->filePath_lineEdit->text()!="")MainWindow::myWorker->details.filePath = ui->filePath_lineEdit->text();
 

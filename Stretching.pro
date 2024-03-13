@@ -15,7 +15,6 @@ INCLUDEPATH+=$$PWD/libs/Include
 
 SOURCES += \
     calculator.cpp \
-    chart.cpp \
     controler.cpp \
     decoderunworker.cpp \
     decodethread.cpp \
@@ -23,7 +22,9 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mylcdnumber.cpp \
+    myslider.cpp \
     newtestwidget.cpp \
+    rangeslider.cpp \
     systemsetwidget.cpp \
     tcpclient.cpp \
     tcpconnectwidget.cpp \
@@ -32,7 +33,6 @@ SOURCES += \
 
 HEADERS += \
     calculator.h \
-    chart.h \
     commandList.h \
     controler.h \
     decoderunworker.h \
@@ -41,7 +41,9 @@ HEADERS += \
     loginwidget.h \
     mainwindow.h \
     mylcdnumber.h \
+    myslider.h \
     newtestwidget.h \
+    rangeslider.h \
     systemsetwidget.h \
     tcpclient.h \
     tcpconnectwidget.h \
@@ -52,6 +54,7 @@ FORMS += \
     calculator.ui \
     loginwidget.ui \
     mainwindow.ui \
+    myslider.ui \
     newtestwidget.ui \
     systemsetwidget.ui \
     tcpconnectwidget.ui \

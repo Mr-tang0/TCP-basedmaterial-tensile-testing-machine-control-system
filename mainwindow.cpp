@@ -129,9 +129,10 @@ void MainWindow::on_actionOpen_triggered()
         if(fileData.mid(0,3)=="TEP")
         {
             QFileInfo fileinfo(filePath);
-            myWorker->details.filePath = fileinfo.absoluteFilePath();
+            myWorker->details.filePath = fileinfo.absolutePath();
 
             myWorker->details.fileName = fileinfo.fileName().remove(0,5)+"_decode";
+
 
             fileData.remove(0,3);
 

@@ -5,6 +5,7 @@
 #include "includeHeader.h"
 #include "controler.h"
 #include<qsplineseries.h>
+#include<rangeslider.h>
 
 namespace Ui {
 class testWidget;
@@ -24,6 +25,10 @@ public:
     void freshUi();
 
     static bool mutiSaveFlag;
+
+    void initThis();
+    RangeSlider* rangeSliderThre = new RangeSlider(Qt::Horizontal, RangeSlider::Option::DoubleHandles, nullptr);
+    void resizeChart(int low,int high);
 
 public slots:
     void fresh(QList<float> decodeData);
@@ -53,6 +58,8 @@ private slots:
 
     void on_autoMove_toggled(bool checked);
 
+
+
 private:
     Ui::testWidget *ui;
     QList<QList<float>> factData;
@@ -60,11 +67,11 @@ private:
     void autoToZreoForce(int targetForce);
     QTimer *autoTimer = new QTimer;
 
-    QSplineSeries *factSeries = new QSplineSeries();
-    QSplineSeries *force_time_Series = new QSplineSeries();
-    QSplineSeries *length_time_Series = new QSplineSeries();
-    QSplineSeries *force_length_Series = new QSplineSeries();
-    QSplineSeries *stress_strain_Series = new QSplineSeries();
+    QLineSeries *factSeries = new QLineSeries();
+    QLineSeries *force_time_Series = new QLineSeries();
+    QLineSeries *length_time_Series = new QLineSeries();
+    QLineSeries *force_length_Series = new QLineSeries();
+    QLineSeries *stress_strain_Series = new QLineSeries();
     QSplineSeries *speed_time_Series = new QSplineSeries();
 
     QChart *chart = new QChart();
@@ -73,24 +80,35 @@ private:
 
     float currentForce = 0;//载荷
     QList<float> tempForceList;//载荷
+    QList<float> ForceList;//载荷
+
 
     float currentStress= 0;//应力
-    QList<float> tempStressList;//载荷
+    QList<float> StressList;
+
 
     float targetLength = 0;//计算位移
     QList<float> temptargetLengthList;//载荷
+    QList<float> targetLengthList;//载荷
+
+
 
     float currentLength = 0;//位移传感器
-    QList<float> tempLengthList;//载荷
+    QList<float> LengthList;//载荷
+
 
     float currentStrain = 0;//应变
-    QList<float> tempStrainList;//载荷
+    QList<float> StrainList;//载荷
+
 
     float currentTime = 0;//时间
     QList<float> tempTimeList;//载荷
+    QList<float> TimeList;//载荷
+
 
     float currentSpeed = 0;//速度
-    QList<float> tempSpeedList;//载荷
+    QList<float> SpeedList;//载荷
+
 
     float startTime = 0;
 
@@ -102,6 +120,50 @@ private:
     int checkWaveId = 1;
 
     bool smoothFlag = false;
+
+    bool leftButtonPressedFlag;
+    QPoint m_oPrePos;
+
+    QValueAxis *timeAxis = new QValueAxis;
+    QValueAxis *forceAxis = new QValueAxis;
+    QValueAxis *TargetAxis = new QValueAxis;
+    QValueAxis *lengthAxis = new QValueAxis;
+    QValueAxis *stressAxis = new QValueAxis;
+    QValueAxis *strainAxis = new QValueAxis;
+    QValueAxis *speedAxis = new QValueAxis;
+
+    int listLow = 0;
+    int listHigh = 9999999;
+    float max(QList<float> t,int low,int high)
+    {
+        if(t.length()<high)high = t.length();
+        QList<float> temp = t.mid(low,high);
+
+        float m = temp.first();
+        if(!temp.isEmpty())
+        {
+            foreach (float item, temp) {
+                if(item>m)m= item;
+            }
+        }
+        qDebug()<<m;
+        return m;
+    }
+
+    float min(QList<float> t,int low,int high){
+        if(t.length()<high)high = t.length();
+        QList<float> temp = t.mid(low,high);
+
+        float m = temp.first();
+        if(!temp.isEmpty())
+        {
+            foreach (float item, temp) {
+                if(item<m)m= item;
+            }
+        }
+        return m;
+    }
+
 
 signals:
     void startTest(QString testType);
@@ -118,6 +180,15 @@ protected:
         // 在这里执行你自己的处理逻辑
     }
     void resize();
+
+    // virtual void mousePressEvent(QMouseEvent *event) override;
+    // virtual void mouseReleaseEvent(QMouseEvent *event)override;
+    // // virtual void mouseDoubleClickEvent(QMouseEvent *event)override;
+    // virtual void mouseMoveEvent(QMouseEvent *event)override;
+    virtual void wheelEvent(QWheelEvent *event)override;
+
+
+    float wheelSize = 1;
 
 
 };
