@@ -26,7 +26,7 @@ TcpConnectWidget::~TcpConnectWidget()
 
 void TcpConnectWidget::on_connect_Button_clicked()
 {
-    MainWindow::myControler->connectToControl(ui->TcpIP->text(),ui->Port->text().toInt(),1000);
+    MainWindow::myControler->connectToControl(ui->TcpIP->text(),ui->Port->text().toInt(),2000);
 }
 
 
@@ -42,7 +42,6 @@ void TcpConnectWidget::commandLinkButton_clicked()
 void TcpConnectWidget::on_commandLinkButton_clicked()
 {
     //登录注册
-    qDebug()<<"click";
     login->show();
 }
 

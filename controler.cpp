@@ -6,7 +6,6 @@ Controler::Controler(QObject *parent)
     : QObject{parent}
 {
 
-
 }
 
 bool Controler::isConnected()
@@ -26,7 +25,7 @@ bool Controler::connectToControl(QString IP,int port,int samplerate)
     if(!myClient->isopen())
     {
         myClient->tcpConnect();
-        flag = myClient->sendMessage(cmd.CMD_connent.toUtf8());
+        myClient->sendMessage(cmd.CMD_connent.toUtf8());
         connect(myClient,&tcpClient::decodeDone,this,[=](QList<float> decodedData){
             emit decodeDone(decodedData);
         });
@@ -38,11 +37,11 @@ bool Controler::connectToControl(QString IP,int port,int samplerate)
     }
     return flag;
 }
+
 bool Controler::connectToControl()
 {
     bool flag = myClient->sendMessage(cmd.CMD_connent.toUtf8());
     return flag;
-
 }
 
 //断开控制器
@@ -52,7 +51,6 @@ bool Controler::disconnectToControl()
     {
         return false;
     }
-
     return myClient->sendMessage(cmd.CMD_disconnent.toUtf8());
 }
 

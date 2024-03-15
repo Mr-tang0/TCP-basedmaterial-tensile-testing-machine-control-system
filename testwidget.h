@@ -5,7 +5,6 @@
 #include "includeHeader.h"
 #include "controler.h"
 #include<qsplineseries.h>
-#include<rangeslider.h>
 
 namespace Ui {
 class testWidget;
@@ -27,7 +26,7 @@ public:
     static bool mutiSaveFlag;
 
     void initThis();
-    RangeSlider* rangeSliderThre = new RangeSlider(Qt::Horizontal, RangeSlider::Option::DoubleHandles, nullptr);
+    // RangeSlider* rangeSliderThre = new RangeSlider(Qt::Horizontal, RangeSlider::Option::DoubleHandles, nullptr);
     void resizeChart(int low,int high);
 
 public slots:
@@ -59,6 +58,7 @@ private slots:
     void on_autoMove_toggled(bool checked);
 
 
+    void on_OK_clicked();
 
 private:
     Ui::testWidget *ui;
@@ -75,8 +75,6 @@ private:
     QSplineSeries *speed_time_Series = new QSplineSeries();
 
     QChart *chart = new QChart();
-
-    void drawer();
 
     float currentForce = 0;//载荷
     QList<float> tempForceList;//载荷
@@ -115,7 +113,7 @@ private:
     QTimer *autoStopTimer = new QTimer;
     QTimer *uiFreshTimer = new QTimer;
     QTimer *mutiSaveTimer = new QTimer;
-    int mutiSaveTime = 500;//强保存时间
+    int mutiSaveTime = 800;//强保存时间
     bool tempflag = false;
     int checkWaveId = 1;
 
@@ -146,7 +144,6 @@ private:
                 if(item>m)m= item;
             }
         }
-        qDebug()<<m;
         return m;
     }
 
@@ -185,7 +182,7 @@ protected:
     // virtual void mouseReleaseEvent(QMouseEvent *event)override;
     // // virtual void mouseDoubleClickEvent(QMouseEvent *event)override;
     // virtual void mouseMoveEvent(QMouseEvent *event)override;
-    virtual void wheelEvent(QWheelEvent *event)override;
+    // virtual void wheelEvent(QWheelEvent *event)override;
 
 
     float wheelSize = 1;

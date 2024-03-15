@@ -24,7 +24,6 @@ SOURCES += \
     mylcdnumber.cpp \
     myslider.cpp \
     newtestwidget.cpp \
-    rangeslider.cpp \
     systemsetwidget.cpp \
     tcpclient.cpp \
     tcpconnectwidget.cpp \
@@ -43,7 +42,6 @@ HEADERS += \
     mylcdnumber.h \
     myslider.h \
     newtestwidget.h \
-    rangeslider.h \
     systemsetwidget.h \
     tcpclient.h \
     tcpconnectwidget.h \

@@ -6,31 +6,31 @@ decodeThread::decodeThread(QObject *parent)
     : QObject{parent}
 {
 
-    for (int i = 0; i < 7; ++i) {
-        runWorker.append(new decodeRunWorker);
-        runThread.append(new QThread);
-        runWorker[i]->moveToThread(runThread[i]);
-        runThread[i]->start();
-    }
+    // for (int i = 0; i < 7; ++i) {
+    //     runWorker.append(new decodeRunWorker);
+    //     runThread.append(new QThread);
+    //     runWorker[i]->moveToThread(runThread[i]);
+    //     runThread[i]->start();
+    // }
 
-    connect(this,&decodeThread::getMessage1,[=](QByteArray message,QList<int> decodeDataNumber,int id){
-        runWorker[0]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
-    });
-    connect(this,&decodeThread::getMessage2,[=](QByteArray message,QList<int> decodeDataNumber,int id){
-        runWorker[1]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
-    });
-    connect(this,&decodeThread::getMessage3,[=](QByteArray message,QList<int> decodeDataNumber,int id){
-        runWorker[2]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
-    });
-    connect(this,&decodeThread::getMessage4,[=](QByteArray message,QList<int> decodeDataNumber,int id){
-        runWorker[3]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
-    });
-    connect(this,&decodeThread::getMessage5,[=](QByteArray message,QList<int> decodeDataNumber,int id){
-        runWorker[4]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
-    });
-    connect(this,&decodeThread::getMessage6,[=](QByteArray message,QList<int> decodeDataNumber,int id){
-        runWorker[6]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
-    });
+    // connect(this,&decodeThread::getMessage1,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+    //     runWorker[0]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    // });
+    // connect(this,&decodeThread::getMessage2,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+    //     runWorker[1]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    // });
+    // connect(this,&decodeThread::getMessage3,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+    //     runWorker[2]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    // });
+    // connect(this,&decodeThread::getMessage4,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+    //     runWorker[3]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    // });
+    // connect(this,&decodeThread::getMessage5,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+    //     runWorker[4]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    // });
+    // connect(this,&decodeThread::getMessage6,[=](QByteArray message,QList<int> decodeDataNumber,int id){
+    //     runWorker[6]->MutiThreaddecodeMessage(message,decodeDataNumber,id);
+    // });
 
 
 }
@@ -74,6 +74,7 @@ void decodeThread::MutiThreaddecodeMessage(QByteArray message,QList<int> decodeD
             float decode = dataToFloat(frame.data[item]);
             decodeData.append(decode);
         }
+
         emit decodeDone(decodeData);
     }
 
@@ -137,9 +138,9 @@ void decodeThread::readFile(QString data)
                 }
                 emit decodeDone(tempDecodeData);
 
-                QEventLoop loop;
-                QTimer::singleShot(1,&loop,SLOT(quit()));
-                loop.exec();
+                // QEventLoop loop;
+                // QTimer::singleShot(0,&loop,SLOT(quit()));
+                // loop.exec();
             }
             i++;
         }

@@ -66,6 +66,7 @@ void newTestWidget::on_Checked_clicked()
 
     MainWindow::myWorker->details.testType = myRadioGroup->checkedButton()->text();
     MainWindow::myWorker->details.targetSize = ui->size_doubleSpinBox->value();
+    MainWindow::myWorker->details.targetLen = ui->length_doubleSpinBox_2->value();
 
     if(ui->filePath_lineEdit->text()!="")MainWindow::myWorker->details.filePath = ui->filePath_lineEdit->text();
 
@@ -74,11 +75,11 @@ void newTestWidget::on_Checked_clicked()
     else
         MainWindow::myWorker->details.fileName = MainWindow::myWorker->details.UseName+MainWindow::myWorker->details.testTime;
 
-    qDebug()<<MainWindow::myWorker->details.filePath;
 
     //压缩拉伸
     MainWindow::myWorker->details.speed = ui->speed_doubleSpinBox_2->value();
     MainWindow::myWorker->details.length = ui->length_doubleSpinBox->value();
+
     //疲劳
     MainWindow::myWorker->details.WaveTypeNumber = ui->waveType_comboBox->currentIndex()+1;
 

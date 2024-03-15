@@ -39,19 +39,20 @@ tcpClient::tcpClient(QObject *parent)
             timer->stop();
             QByteArray message = mySocket->readAll();
             mutireadBuffer = mutireadBuffer + message;
-            qDebug()<<mutireadBuffer.length()/218;
         }
         else
         {
+            // timer->start(10);
             timer->start(1000/details.sampleRate);//这个是开启接受计时器，由于传感器发送数据过快，为避免拥堵，按照设置采样率去接受处理
         }
     });
 
     connect(mySocket,&QTcpSocket::connected,this, [=](){
-        qDebug()<<"connected!";
+        // timer->start(10);
         timer->start(1000/details.sampleRate);//这个是开启接受计时器，由于传感器发送数据过快，为避免拥堵，按照设置采样率去接受处理
         emit connected();
     });
+
     connect(mySocket,&QTcpSocket::disconnected,this,[=](){
         qDebug()<<"disconnected!";
         timer->stop();
@@ -92,6 +93,7 @@ void tcpClient::MutiDecode()
 
     readBuffer.clear();
 }
+
 
 bool tcpClient::isopen()
 {

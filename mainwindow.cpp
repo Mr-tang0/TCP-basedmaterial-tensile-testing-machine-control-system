@@ -70,6 +70,7 @@ void MainWindow::initThis()
     connect(Controler::myClient,&tcpClient::disconnected,this,[=](){
         m_snackbar->addMessage("异常断开!");
     });
+
     connect(myControler,&Controler::decodeDone,test,&testWidget::fresh);//连接解码和界面
 
     connect(test,&testWidget::saved,this,[=](){

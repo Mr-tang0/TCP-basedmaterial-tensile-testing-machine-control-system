@@ -73,7 +73,8 @@ struct workerDetails
     QString filePath = "C:/";
     QString fileName = "userData%1.csv";
 
-    float targetSize = 1;//标距段尺寸mm
+    float targetSize = 1;//标距段尺寸mm2
+    float targetLen = 4;//标距段长度mm
 
     //拉伸或压缩
     double speed = 1;//速度mm/s

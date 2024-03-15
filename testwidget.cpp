@@ -17,15 +17,6 @@ testWidget::testWidget(QWidget *parent)
 
     initThis();
 
-    QHBoxLayout* rangeSliderWidgetSpaceLayout = new QHBoxLayout();
-    rangeSliderWidgetSpaceLayout->addWidget(rangeSliderThre);
-    ui->widget->setLayout(rangeSliderWidgetSpaceLayout);
-
-    connect(rangeSliderThre,&RangeSlider::ValueChanged,[=](int low,int high){
-        resizeChart(low,high);
-    });
-
-
 }
 
 testWidget::~testWidget()
@@ -36,7 +27,6 @@ testWidget::~testWidget()
 void testWidget::initThis()
 {
     chart->legend()->hide();
-    // chart->createDefaultAxes();
 
     timeAxis->setTitleText("time(secs)");//标题
     timeAxis->setLabelFormat("%.3f"); //标签格式：每个单位保留几位小数
@@ -53,13 +43,8 @@ void testWidget::initThis()
     forceAxis->setMinorTickCount(5); //每个单位之间绘制了多少虚网线
     forceAxis->setLabelsFont(font);
 
-
-
     chart->addSeries(factSeries);
-
     ui->graphicsView->setChart(chart);
-
-
 
     QButtonGroup *myRadioGroup = new QButtonGroup(this);
 
@@ -71,7 +56,7 @@ void testWidget::initThis()
 
     connect(myRadioGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),this,[=](){
         checkWaveId = myRadioGroup->checkedId();
-        qDebug()<<checkWaveId;
+        // qDebug()<<checkWaveId;
         freshUi();
     });
 
@@ -86,26 +71,30 @@ void testWidget::initThis()
     });
     connect(ui->Duration,&myLcdNumber::doubleClicked,this,[=](){
         MainWindow::myControler->channalClear(20);
+        startTime = currentTime;
     });
 
+    //自动点动计时器
     connect(autoTimer,&QTimer::timeout,this,[=](){
         if(autoFlag) autoToZreoForce(5);
     });
 
+    //ui刷新计时器
     connect(uiFreshTimer,&QTimer::timeout,this,[=](){
         if(freshUiFlag) freshUi();
     });
 
+    //自动停止计时器
     connect(autoStopTimer,&QTimer::timeout,this,[=](){
         switch (MainWindow::myWorker->details.stopAction) {
         case 0:
             if(currentTime-startTime>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
             break;
         case 1:
-            if(currentForce>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
+            if(abs(currentForce)>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
             break;
         case 2:
-            if(targetLength-MainWindow::myWorker->details.lengthZero>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
+            if(abs(targetLength-MainWindow::myWorker->details.lengthZero)>MainWindow::myWorker->details.stopActionValue) MainWindow::myControler->openCircleControl_STOP(3);
             break;
         default:
             autoStopTimer->stop();
@@ -115,7 +104,7 @@ void testWidget::initThis()
     });
 
 
-    uiFreshTimer->start(150);
+    uiFreshTimer->start(200);
     freshUiFlag = true;
 
 
@@ -131,6 +120,7 @@ void testWidget::initThis()
 //         m_oPrePos = pEvent->pos();
 //     }
 // }
+
 // void testWidget::mousePressEvent(QMouseEvent *pEvent)
 // {
 //     if (pEvent->button() == Qt::LeftButton)
@@ -140,7 +130,7 @@ void testWidget::initThis()
 //         m_oPrePos = pEvent->pos();
 //         this->setCursor(Qt::OpenHandCursor);
 //     }
-//     qDebug()<<leftButtonPressedFlag<<m_oPrePos;
+
 
 // }
 // void testWidget::mouseReleaseEvent(QMouseEvent *pEvent)
@@ -155,26 +145,24 @@ void testWidget::initThis()
 // }
 
 
-void testWidget::wheelEvent(QWheelEvent *pEvent)
-{
+// void testWidget::wheelEvent(QWheelEvent *pEvent)
+// {
 
-    qreal rVal = std::pow(0.999, pEvent->delta()); // 设置比例
+//     qreal rVal = std::pow(0.999, pEvent->delta()); // 设置比例
 
-    QRectF oPlotAreaRect = chart->plotArea();
-    QPointF oCenterPoint = oPlotAreaRect.center();
+//     QRectF oPlotAreaRect = chart->plotArea();
+//     QPointF oCenterPoint = oPlotAreaRect.center();
 
-    // oPlotAreaRect.setWidth(oPlotAreaRect.width() * rVal);
+//     oPlotAreaRect.setWidth(oPlotAreaRect.width() * rVal);
 
-    oPlotAreaRect.setHeight(oPlotAreaRect.height() * rVal);
+//     QPointF oNewCenterPoint(2 * oCenterPoint - pEvent->position() - (oCenterPoint - pEvent->position()) / rVal);
 
-    QPointF oNewCenterPoint(2 * oCenterPoint - pEvent->position() - (oCenterPoint - pEvent->position()) / rVal);
+//     oPlotAreaRect.moveCenter(oNewCenterPoint);
 
-    oPlotAreaRect.moveCenter(oNewCenterPoint);
+//     this->chart->zoomIn(oPlotAreaRect);
 
-    this->chart->zoomIn(oPlotAreaRect);
+// }
 
-
-}
 
 void testWidget::resize()
 {
@@ -188,12 +176,10 @@ void testWidget::resize()
     ui->label_factlength->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
     ui->label_stain->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
     ui->label_time->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
-
 }
+
 void testWidget::freshUi()
 {
-
-
     ui->load->display(QString::number(currentForce,'f',2));
 
 
@@ -208,7 +194,9 @@ void testWidget::freshUi()
 
     ui->strain->display(QString::number(currentStrain,'f',4));
 
+
     ui->Duration->display(QString::number(currentTime-startTime,'f',4));
+
 
     while(!chart->series().isEmpty())
     {
@@ -220,7 +208,6 @@ void testWidget::freshUi()
     switch (checkWaveId) {
     case 1:
         chart->addSeries(force_time_Series);
-
 
         forceAxis->setTitleText("force(N)");//标题
 
@@ -255,7 +242,7 @@ void testWidget::freshUi()
         if(!StrainList.isEmpty())timeAxis->setRange(min(StrainList,listLow,listHigh),max(StrainList,listLow,listHigh));//设置坐标轴范围
         break;
     case 5:
-        qDebug()<<5;
+
         chart->addSeries(speed_time_Series);
         forceAxis->setTitleText("speed(mm/s)");//标题
         if(!SpeedList.isEmpty())forceAxis->setRange(min(SpeedList,listLow,listHigh),max(SpeedList,listLow,listHigh));//设置坐标轴范围
@@ -274,15 +261,11 @@ void testWidget::freshUi()
     chart->setAxisY(forceAxis,factSeries);
 
 
-
-
-
 }
 
 void testWidget::fresh(QList<float> decodeData)
 {
     //0:S0力，10：S10计算位移,13：S13位移传感,29：时间
-
 
     if(temptargetLengthList.length()>15)
     {
@@ -294,12 +277,13 @@ void testWidget::fresh(QList<float> decodeData)
         {
 
             float tempSpeed1 = (decodeData[1]-temptargetLengthList.first())/(decodeData[3]-tempTimeList.first());
-            float tempSpeed2 = (decodeData[1]-temptargetLengthList.last())/(decodeData[3]-tempTimeList.last());
-            float tempSpeed = tempSpeed1*0.95+tempSpeed2*0.05;
-
-            currentSpeed = tempSpeed*0.1+currentSpeed*0.9;
+            currentSpeed = tempSpeed1*0.1+currentSpeed*0.9;
+            qDebug()<<"currentSpeed"<<currentSpeed;
         }
+    }
+    else{
 
+        currentSpeed = 0;
     }
 
     currentForce = decodeData[0];
@@ -307,7 +291,7 @@ void testWidget::fresh(QList<float> decodeData)
     currentLength = decodeData[2];
     currentTime = decodeData[3];
     currentStress = currentForce/MainWindow::myWorker->details.targetSize;
-    currentStrain = currentLength/MainWindow::myWorker->details.targetSize;
+    currentStrain = currentLength/MainWindow::myWorker->details.targetLen;
 
     temptargetLengthList<<targetLength;
     tempTimeList<<currentTime;
@@ -319,8 +303,6 @@ void testWidget::fresh(QList<float> decodeData)
     StrainList<<currentStrain;
     TimeList<<currentTime;
     SpeedList<<currentSpeed;
-
-
 
     *force_time_Series<<QPointF(currentTime,currentForce);
 
@@ -342,13 +324,6 @@ void testWidget::fresh(QList<float> decodeData)
 }
 
 
-void testWidget::drawer()
-{
-    if(!chart->series().isEmpty())chart->removeSeries(factSeries);
-    chart->addSeries(factSeries);
-    chart->legend()->hide();
-    chart->createDefaultAxes();
-}
 void testWidget::autoToZreoForce(int targetForce)
 {
     if(currentForce>targetForce)
@@ -370,14 +345,15 @@ void testWidget::autoToZreoForce(int targetForce)
 
 void testWidget::on_up_clicked()
 {
-
+    if(!uiFreshTimer->isActive())uiFreshTimer->start(200);
     MainWindow::myControler->connectToControl();
-    MainWindow::myControler->openCircleControl(-ui->matul->value(),3);
+    MainWindow::myControler->openCircleControl(-ui->matul->value()*100,3);
 }
 
 
 void testWidget::on_stop_clicked()
 {
+    if(!uiFreshTimer->isActive())uiFreshTimer->start(200);
     MainWindow::myControler->connectToControl();
     MainWindow::myControler->openCircleControl_STOP(3);
 }
@@ -385,21 +361,24 @@ void testWidget::on_stop_clicked()
 
 void testWidget::on_down_clicked()
 {
+    if(!uiFreshTimer->isActive())uiFreshTimer->start(200);
     MainWindow::myControler->connectToControl();
-    MainWindow::myControler->openCircleControl(ui->matul->value(),3);
+    MainWindow::myControler->openCircleControl(ui->matul->value()*100,3);
 }
 
 
 void testWidget::on_startTest_clicked()
 {
-
+    //连接
     MainWindow::myControler->connectToControl();
 
-
+    //设置开始时间
     startTime = currentTime;
 
+    //清除文件保存中间
     factData.clear();
 
+    //清除图表
     force_time_Series->clear();
 
     length_time_Series->clear();
@@ -410,6 +389,7 @@ void testWidget::on_startTest_clicked()
 
     speed_time_Series ->clear();
 
+    //判断运动方式
     if(MainWindow::myWorker->details.testType=="拉伸")
     {
         lengthControlDetails detail;
@@ -440,35 +420,34 @@ void testWidget::on_startTest_clicked()
         detail.waveNumber = MainWindow::myWorker->details.cycleNumber;
         MainWindow::myControler->closeCircleControl_Wave(detail);
         emit startTest("疲劳加载中");
-
     }
+
+    //强保存标志：禁止ui刷新>清除readBuffer>
     if(mutiSaveFlag)
     {
         uiFreshTimer->stop();
+
         tcpClient::mutireadBuffer.clear();
+
         connect(mutiSaveTimer,&QTimer::timeout,this,[=](){
             if(tempflag)
             {
                 MainWindow::myControler->disconnectToControl();
-
                 on_mutiSave_clicked();
-
-                qDebug()<<"STOP!";
                 mutiSaveTimer->stop();
                 MainWindow::myControler->connectToControl();
             }
             tempflag = !tempflag;
-            qDebug()<<tempflag;
         });
         mutiSaveTimer->start(mutiSaveTime);
     }
     else
     {
-        uiFreshTimer->start(250);
+        uiFreshTimer->start(100);
         autoStopTimer->start(500);
     }
-
 }
+
 void testWidget::saveTest(QString filePath)
 {
     QFileInfo fileInfo(filePath);
@@ -506,10 +485,9 @@ void testWidget::saveTest(QString filePath)
         labelFile.close();
         emit saved();
     }
-
-
-
 }
+
+
 void testWidget::StrongSaveTest(QString filePath)
 {
     QFileInfo fileInfo(filePath);
@@ -544,14 +522,14 @@ void testWidget::on_setLengthZero_clicked()
 {
     MainWindow::myWorker->details.lengthZero = targetLength;
     MainWindow::myWorker->details.factLengthZero = currentLength;
-    qDebug()<<"zero:"<<targetLength<<currentLength;
+    // qDebug()<<"zero:"<<targetLength<<currentLength;
 }
 
 
 void testWidget::on_saveTest_clicked()
 {
     QString filePath  = MainWindow::myWorker->details.filePath+"/"+MainWindow::myWorker->details.fileName+".csv";
-    qDebug()<<filePath;
+
     if(MainWindow::myWorker->details.filePath=="C:/") emit failed();
     else saveTest(filePath);
 }
@@ -564,10 +542,8 @@ void testWidget::on_stopTest_clicked()
 
     MainWindow::myControler->openCircleControl_STOP(3);
     MainWindow::myControler->disconnectToControl();
-    factSeries->clear();
+
     decodeThread::readFlag = false;
-
-
 }
 
 
@@ -593,13 +569,17 @@ void testWidget::on_clearTest_clicked()
     TimeList.clear();
     SpeedList.clear();
 
+    temptargetLengthList.clear();
+    tempTimeList.clear();
+
+    startTime = currentTime;
+
     // emit clear();
 }
 
 
 void testWidget::on_emergency_clicked()
 {
-
     MainWindow::myControler->openCircleControl_STOP(3);
 }
 
@@ -628,6 +608,7 @@ void testWidget::on_autoMove_toggled(bool checked)
 {
     MainWindow::myControler->connectToControl();
     autoFlag = checked;
+
     if(!autoTimer->isActive())
     {
         MainWindow::myControler->channalClear(0);
@@ -636,13 +617,13 @@ void testWidget::on_autoMove_toggled(bool checked)
     if(autoFlag)
     {
         ui->startTest->setEnabled(false);
-        ui->up->setEnabled(false);
-        ui->down->setEnabled(false);
+        // ui->up->setEnabled(false);
+        // ui->down->setEnabled(false);
 
     }else{
         ui->startTest->setEnabled(true);
-        ui->up->setEnabled(true);
-        ui->down->setEnabled(true);
+        // ui->up->setEnabled(true);
+        // ui->down->setEnabled(true);
         autoTimer->stop();
     }
 
@@ -652,16 +633,9 @@ void testWidget::on_autoMove_toggled(bool checked)
 void testWidget::resizeChart(int low,int high)
 {
 
-    int time1=0;
-    int time2=0;
-    if(!TimeList.isEmpty())
-    {
-        time1 = 0.01*low*TimeList.length();
-        time2 = 0.01*high*TimeList.length();
-    }
+    int time1=low;
+    int time2=high;
 
-    listLow = time1;
-    listHigh = time2;
 
     force_time_Series->clear();
 
@@ -674,6 +648,11 @@ void testWidget::resizeChart(int low,int high)
     speed_time_Series ->clear();
 
     if(time2>TimeList.length())time2 = TimeList.length();
+    if(time1<TimeList.length())time1 = 0;
+
+    listLow = time1;
+    listHigh = time2;
+
     for (int i = time1; i < time2; ++i)
     {
         QPointF point = QPointF(TimeList[i],ForceList[i]);
@@ -692,5 +671,20 @@ void testWidget::resizeChart(int low,int high)
         *speed_time_Series <<point;
     }
     freshUi();
+}
+
+void testWidget::on_OK_clicked()
+{
+    float t1 = ui->time1->value();
+    float t2 = ui->time2->value();
+
+
+    if(!TimeList.isEmpty())
+    {
+        int low = (t1-TimeList.first())*TimeList.length()/(TimeList.last()-TimeList.first());
+        int high = (t2-TimeList.first())*TimeList.length()/(TimeList.last()-TimeList.first());
+        resizeChart(low,high);
+    }
+
 }
 
