@@ -58,7 +58,17 @@ private slots:
     void on_autoMove_toggled(bool checked);
 
 
-    void on_OK_clicked();
+    // void on_OK_clicked();
+
+    void on_checkBox_forceToTime_toggled(bool checked);
+
+    void on_checkBox_lengthToTime_toggled(bool checked);
+
+    void on_checkBox_speedTotime_toggled(bool checked);
+
+    void on_checkBox_forceToLength_toggled(bool checked);
+
+    void on_checkBox_stresToStrain_toggled(bool checked);
 
 private:
     Ui::testWidget *ui;
@@ -113,9 +123,10 @@ private:
     QTimer *autoStopTimer = new QTimer;
     QTimer *uiFreshTimer = new QTimer;
     QTimer *mutiSaveTimer = new QTimer;
-    int mutiSaveTime = 800;//强保存时间
+    int mutiSaveTime = 1500;//强保存时间
     bool tempflag = false;
     int checkWaveId = 1;
+    QList<int> WaveId = {1};
 
     bool smoothFlag = false;
 
@@ -144,6 +155,7 @@ private:
                 if(item>m)m= item;
             }
         }
+        // m = QString::number(m, 'f', 2).toDouble();
         return m;
     }
 
@@ -158,6 +170,7 @@ private:
                 if(item<m)m= item;
             }
         }
+        // m = QString::number(m, 'f', 2).toDouble();
         return m;
     }
 
@@ -174,7 +187,7 @@ protected:
         QWidget::resizeEvent(event);
 
         resize();
-        // 在这里执行你自己的处理逻辑
+
     }
     void resize();
 

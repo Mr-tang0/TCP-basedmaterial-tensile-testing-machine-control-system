@@ -28,37 +28,48 @@ void testWidget::initThis()
 {
     chart->legend()->hide();
 
-    timeAxis->setTitleText("time(secs)");//标题
-    timeAxis->setLabelFormat("%.3f"); //标签格式：每个单位保留几位小数
-    timeAxis->setTickCount(10); //主分隔个数：0到10分成20个单位
-    timeAxis->setMinorTickCount(5); //每个单位之间绘制了多少虚网线
     QFont font;
-    font.setPointSize(15);
+    font.setFamily("Arial");
+    font.setPointSize(25);
+    timeAxis->setTitleText("Time (secs)");//标题
+
+    timeAxis->setTitleFont(font);
+    timeAxis->setLabelFormat("%.3f"); //标签格式：每个单位保留几位小数
+    timeAxis->setTickCount(6); //主分隔个数：0到10分成20个单位
+    timeAxis->setMinorTickCount(4); //每个单位之间绘制了多少虚网线
+
+    font.setPointSize(20);
     timeAxis->setLabelsFont(font);
+    timeAxis->setLabelFormat("%.2f"); //标签格式：每个单位保留几位小数
 
 
-    forceAxis->setTitleText("force(N)");//标题
+    font.setPointSize(25);
+    forceAxis->setTitleFont(font);
+    forceAxis->setTitleText("Force (N)");//标题
     forceAxis->setLabelFormat("%.1f"); //标签格式：每个单位保留几位小数
-    forceAxis->setTickCount(10); //主分隔个数：0到10分成20个单位
-    forceAxis->setMinorTickCount(5); //每个单位之间绘制了多少虚网线
+    forceAxis->setTickCount(6); //主分隔个数：0到10分成20个单位
+    forceAxis->setMinorTickCount(4); //每个单位之间绘制了多少虚网线
+
+    font.setPointSize(20);
     forceAxis->setLabelsFont(font);
+    forceAxis->setLabelFormat("%.1f"); //标签格式：每个单位保留几位小数
 
     chart->addSeries(factSeries);
     ui->graphicsView->setChart(chart);
 
-    QButtonGroup *myRadioGroup = new QButtonGroup(this);
+    // QButtonGroup *myRadioGroup = new QButtonGroup(this);
 
-    myRadioGroup->addButton(ui->checkBox_forceToTime,1);
-    myRadioGroup->addButton(ui->checkBox_lengthToTime,2);
-    myRadioGroup->addButton(ui->checkBox_forceToLength,3);
-    myRadioGroup->addButton(ui->checkBox_stresToStrain,4);
-    myRadioGroup->addButton(ui->checkBox_speedTotime,5);
+    // myRadioGroup->addButton(ui->checkBox_forceToTime,1);
+    // myRadioGroup->addButton(ui->checkBox_lengthToTime,2);
+    // myRadioGroup->addButton(ui->checkBox_forceToLength,3);
+    // myRadioGroup->addButton(ui->checkBox_stresToStrain,4);
+    // myRadioGroup->addButton(ui->checkBox_speedTotime,5);
 
-    connect(myRadioGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),this,[=](){
-        checkWaveId = myRadioGroup->checkedId();
-        // qDebug()<<checkWaveId;
-        freshUi();
-    });
+    // connect(myRadioGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),this,[=](){
+    //     checkWaveId = myRadioGroup->checkedId();
+    //     WaveId.append(myRadioGroup->checkedId());
+    //     freshUi();
+    // });
 
     connect(ui->load,&myLcdNumber::doubleClicked,this,[=](){
         MainWindow::myControler->channalClear(0);
@@ -168,34 +179,33 @@ void testWidget::resize()
 {
 
     int newFontSize = std::min(this->size().width(), this->size().height()); // 这里假设窗口每宽高100像素增大1个字体大小单位
-    qDebug()<<newFontSize;
 
-    ui->label_load->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
-    ui->label_stress->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
-    ui->label_targetlength->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
-    ui->label_factlength->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
-    ui->label_stain->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
-    ui->label_time->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/25));
+    ui->label_load->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/30));
+    ui->label_stress->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/30));
+    ui->label_targetlength->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/30));
+    ui->label_factlength->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/30));
+    ui->label_stain->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/30));
+    ui->label_time->setStyleSheet(QStringLiteral("font: %1px \"黑体\"").arg(newFontSize/30));
 }
 
 void testWidget::freshUi()
 {
-    ui->load->display(QString::number(currentForce,'f',2));
+    ui->load->display(QString::number(currentForce,'f',1));
 
 
-    ui->stress->display(QString::number(currentStress,'f',2));
+    ui->stress->display(QString::number(currentStress,'f',1));
 
 
-    ui->displacement->display(QString::number(targetLength-MainWindow::myWorker->details.lengthZero,'f',4));
+    ui->displacement->display(QString::number(targetLength-MainWindow::myWorker->details.lengthZero,'f',2));
 
 
-    ui->displacement_sensors->display(QString::number(currentLength-MainWindow::myWorker->details.factLengthZero,'f',4));
+    ui->displacement_sensors->display(QString::number(currentLength-MainWindow::myWorker->details.factLengthZero,'f',2));
 
 
-    ui->strain->display(QString::number(currentStrain,'f',4));
+    ui->strain->display(QString::number(currentStrain,'f',2));
 
 
-    ui->Duration->display(QString::number(currentTime-startTime,'f',4));
+    ui->Duration->display(QString::number(currentTime-startTime,'f',3));
 
 
     while(!chart->series().isEmpty())
@@ -205,55 +215,66 @@ void testWidget::freshUi()
 
     // chart->removeAllSeries();
 
-    switch (checkWaveId) {
-    case 1:
-        chart->addSeries(force_time_Series);
+    QPen pen;
+    pen.setWidth(3);
+    QList<QColor> color = {Qt::black,Qt::red,Qt::blue,Qt::green,Qt::yellow};
 
-        forceAxis->setTitleText("force(N)");//标题
+    foreach (int id, WaveId) {
+        pen.setColor(color[id-1]);
+        switch (id) {
+        case 1:
+            force_time_Series->setPen(pen);
+            chart->addSeries(force_time_Series);
+            forceAxis->setTitleText("Force (N)");//标题
 
-        if(!ForceList.isEmpty())forceAxis->setRange(min(ForceList,listLow,listHigh),max(ForceList,listLow,listHigh));//设置坐标轴范围
+            if(!ForceList.isEmpty())forceAxis->setRange(min(ForceList,listLow,listHigh),max(ForceList,listLow,listHigh));//设置坐标轴范围
 
-        timeAxis->setTitleText("time(s)");//标题
-        if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
-        break;
-    case 2:
-        chart->addSeries(length_time_Series);
-        forceAxis->setTitleText("length(mm)");//标题
-        if(!LengthList.isEmpty())forceAxis->setRange(min(LengthList,listLow,listHigh),max(LengthList,listLow,listHigh));//设置坐标轴范围
+            timeAxis->setTitleText("Time (s)");//标题
+            if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
+            break;
+        case 2:
+            length_time_Series->setPen(pen);
+            chart->addSeries(length_time_Series);
+            forceAxis->setTitleText("Length (mm)");//标题
+            if(!LengthList.isEmpty())forceAxis->setRange(min(LengthList,listLow,listHigh),max(LengthList,listLow,listHigh));//设置坐标轴范围
 
-        timeAxis->setTitleText("time(s)");//标题
-        if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
-        break;
-    case 3:
-        chart->addSeries(force_length_Series);
-        forceAxis->setTitleText("force(N)");//标题
-        if(!ForceList.isEmpty())forceAxis->setRange(min(ForceList,listLow,listHigh),max(ForceList,listLow,listHigh));//设置坐标轴范围
+            timeAxis->setTitleText("Time (s)");//标题
+            if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
+            break;
+        case 3:
+            force_length_Series->setPen(pen);
+            chart->addSeries(force_length_Series);
+            forceAxis->setTitleText("Force (N)");//标题
+            if(!ForceList.isEmpty())forceAxis->setRange(min(ForceList,listLow,listHigh),max(ForceList,listLow,listHigh));//设置坐标轴范围
 
-        timeAxis->setTitleText("length(mm)");//标题
-        if(!LengthList.isEmpty())timeAxis->setRange(min(LengthList,listLow,listHigh),max(LengthList,listLow,listHigh));//设置坐标轴范围
-        break;
+            timeAxis->setTitleText("Length (mm)");//标题
+            if(!LengthList.isEmpty())timeAxis->setRange(min(LengthList,listLow,listHigh),max(LengthList,listLow,listHigh));//设置坐标轴范围
+            break;
 
-    case 4:
-        chart->addSeries(stress_strain_Series);
-        forceAxis->setTitleText("stress");//标题
-        if(!StressList.isEmpty())forceAxis->setRange(min(StressList,listLow,listHigh),max(StressList,listLow,listHigh));//设置坐标轴范围
+        case 4:
+            stress_strain_Series->setPen(pen);
+            chart->addSeries(stress_strain_Series);
+            forceAxis->setTitleText("Stress");//标题
+            if(!StressList.isEmpty())forceAxis->setRange(min(StressList,listLow,listHigh),max(StressList,listLow,listHigh));//设置坐标轴范围
 
-        timeAxis->setTitleText("strain");//标题
-        if(!StrainList.isEmpty())timeAxis->setRange(min(StrainList,listLow,listHigh),max(StrainList,listLow,listHigh));//设置坐标轴范围
-        break;
-    case 5:
+            timeAxis->setTitleText("Strain");//标题
+            if(!StrainList.isEmpty())timeAxis->setRange(min(StrainList,listLow,listHigh),max(StrainList,listLow,listHigh));//设置坐标轴范围
+            break;
+        case 5:
+            speed_time_Series->setPen(pen);
+            chart->addSeries(speed_time_Series);
+            forceAxis->setTitleText("Speed (mm/s)");//标题
+            if(!SpeedList.isEmpty())forceAxis->setRange(min(SpeedList,listLow,listHigh),max(SpeedList,listLow,listHigh));//设置坐标轴范围
 
-        chart->addSeries(speed_time_Series);
-        forceAxis->setTitleText("speed(mm/s)");//标题
-        if(!SpeedList.isEmpty())forceAxis->setRange(min(SpeedList,listLow,listHigh),max(SpeedList,listLow,listHigh));//设置坐标轴范围
+            timeAxis->setTitleText("Time (s)");//标题
+            if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
+            break;
+        default:
 
-        timeAxis->setTitleText("time(s)");//标题
-        if(!TimeList.isEmpty())timeAxis->setRange(min(TimeList,listLow,listHigh),max(TimeList,listLow,listHigh));//设置坐标轴范围
-        break;
-    default:
-
-        break;
+            break;
+        }
     }
+
 
     chart->addSeries(factSeries);
 
@@ -304,15 +325,21 @@ void testWidget::fresh(QList<float> decodeData)
     TimeList<<currentTime;
     SpeedList<<currentSpeed;
 
+
     *force_time_Series<<QPointF(currentTime,currentForce);
+
 
     *length_time_Series<<QPointF(currentTime,currentLength);
 
+
     *force_length_Series<<QPointF(currentLength-MainWindow::myWorker->details.lengthZero,currentForce);
+
 
     *stress_strain_Series<<QPointF(currentStrain,currentStress);
 
+
     *speed_time_Series<<QPointF(currentTime,currentSpeed);
+
 
     float tempForce = currentForce;
     float temptargetLength = targetLength-MainWindow::myWorker->details.lengthZero;
@@ -673,18 +700,54 @@ void testWidget::resizeChart(int low,int high)
     freshUi();
 }
 
-void testWidget::on_OK_clicked()
+// void testWidget::on_OK_clicked()
+// {
+//     float t1 = ui->time1->value();
+//     float t2 = ui->time2->value();
+
+
+//     if(!TimeList.isEmpty())
+//     {
+//         int low = (t1-TimeList.first())*TimeList.length()/(TimeList.last()-TimeList.first());
+//         int high = (t2-TimeList.first())*TimeList.length()/(TimeList.last()-TimeList.first());
+//         resizeChart(low,high);
+//     }
+
+// }
+
+
+
+void testWidget::on_checkBox_forceToTime_toggled(bool checked)
 {
-    float t1 = ui->time1->value();
-    float t2 = ui->time2->value();
+    if(checked)WaveId.append(1);
+    else WaveId.removeOne(1);
+}
 
 
-    if(!TimeList.isEmpty())
-    {
-        int low = (t1-TimeList.first())*TimeList.length()/(TimeList.last()-TimeList.first());
-        int high = (t2-TimeList.first())*TimeList.length()/(TimeList.last()-TimeList.first());
-        resizeChart(low,high);
-    }
+void testWidget::on_checkBox_lengthToTime_toggled(bool checked)
+{
+    if(checked)WaveId.append(2);
+    else WaveId.removeOne(2);
+}
 
+
+void testWidget::on_checkBox_speedTotime_toggled(bool checked)
+{
+    if(checked)WaveId.append(5);
+    else WaveId.removeOne(5);
+}
+
+
+void testWidget::on_checkBox_forceToLength_toggled(bool checked)
+{
+    if(checked)WaveId.append(3);
+    else WaveId.removeOne(3);
+}
+
+
+void testWidget::on_checkBox_stresToStrain_toggled(bool checked)
+{
+    if(checked)WaveId.append(4);
+    else WaveId.removeOne(4);
 }
 

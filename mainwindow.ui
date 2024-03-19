@@ -29,7 +29,7 @@ font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
            <property name="minimumSize">
             <size>
              <width>30</width>
-             <height>200</height>
+             <height>500</height>
             </size>
            </property>
            <property name="maximumSize">
